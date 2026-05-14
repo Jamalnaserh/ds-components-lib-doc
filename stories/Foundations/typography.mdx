@@ -1,0 +1,154 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import { useEffect, useMemo, useState } from 'react';
+
+<Meta title="Foundations/Typography" />
+
+## Typography
+
+Typography is exposed as CSS variables:
+
+- font families: `--font-family-base`, `--font-family-mono`
+- font weights: `--font-weight-regular`, `--font-weight-medium`, ...
+- type scale: `--font-size-text-md`, `--lh-text-md`, `--ls-text-md`, ...
+
+### Sample text
+
+<div
+  style={{
+    border: '1px solid rgba(0,0,0,0.08)',
+    borderRadius: 12,
+    background: 'var(--white)',
+    padding: 16,
+  }}
+>
+  <div style={{ fontFamily: 'var(--font-family-base)' }}>
+    <div
+      style={{
+        fontSize: 'var(--font-size-text-lg)',
+        lineHeight: 'var(--lh-text-lg)',
+        letterSpacing: 'var(--ls-text-lg)',
+        fontWeight: 'var(--font-weight-semibold)',
+      }}
+    >
+      Large text (lg)
+    </div>
+    <div style={{ height: 8 }} />
+    <div
+      style={{
+        fontSize: 'var(--font-size-text-md)',
+        lineHeight: 'var(--lh-text-md)',
+        letterSpacing: 'var(--ls-text-md)',
+        fontWeight: 'var(--font-weight-regular)',
+      }}
+    >
+      Medium text (md) — The quick brown fox jumps over the lazy dog.
+    </div>
+    <div style={{ height: 8 }} />
+    <div
+      style={{
+        fontSize: 'var(--font-size-text-sm)',
+        lineHeight: 'var(--lh-text-sm)',
+        letterSpacing: 'var(--ls-text-sm)',
+        fontWeight: 'var(--font-weight-regular)',
+        opacity: 0.8,
+      }}
+    >
+      Small text (sm) — The quick brown fox jumps over the lazy dog.
+    </div>
+  </div>
+</div>
+
+### Type scale (auto)
+
+This section scans `:root` for tokens like `--font-size-*`, `--lh-*`, `--ls-*` and previews them.
+
+export function useRootCssVars() {
+  const [vars, setVars] = useState([]);
+
+useEffect(() => {
+const root = document.documentElement;
+const styles = getComputedStyle(root);
+const list = [];
+for (let i = 0; i < styles.length; i += 1) {
+const name = styles[i];
+if (!name || !name.startsWith('--')) continue;
+const value = styles.getPropertyValue(name).trim();
+list.push({ name, value });
+}
+setVars(list);
+}, []);
+
+return vars;
+}
+
+export function TypographyScale() {
+  const vars = useRootCssVars();
+  const [q, setQ] = useState('text-');
+
+const tokens = useMemo(() => {
+const query = String(q || '').trim().toLowerCase();
+const isType = (n) =>
+n.startsWith('--font-size-') || n.startsWith('--lh-') || n.startsWith('--ls-') || n.startsWith('--font-weight-');
+return vars
+.filter((x) => isType(x.name))
+.filter((x) => (query ? x.name.toLowerCase().includes(query) : true))
+.sort((a, b) => a.name.localeCompare(b.name));
+}, [vars, q]);
+
+return (
+<div style={{ display: 'grid', gap: 12 }}>
+<input
+type="search"
+value={q}
+onChange={(e) => setQ(e.target.value)}
+placeholder="Filter (example: text-md, display, font-weight)…"
+style={{
+          width: 'min(720px, 100%)',
+          padding: '10px 12px',
+          borderRadius: 12,
+          border: '1px solid rgba(0,0,0,0.12)',
+          outline: 'none',
+          background: 'var(--white)',
+          fontFamily: 'var(--font-family-base)',
+        }}
+/>
+
+      <div style={{ fontFamily: 'var(--font-family-base)', fontSize: 13, color: 'var(--dark-grey)' }}>
+        Found <strong>{tokens.length}</strong> typography tokens.
+      </div>
+
+      <div style={{ display: 'grid', gap: 10 }}>
+        {tokens
+          .filter((x) => x.name.startsWith('--font-size-'))
+          .slice(0, 40)
+          .map((x) => {
+            const key = x.name.replace('--font-size-', '');
+            const lh = `var(--lh-${key})`;
+            const ls = `var(--ls-${key})`;
+            return (
+              <div
+                key={x.name}
+                style={{ border: '1px solid rgba(0,0,0,0.08)', borderRadius: 12, background: 'var(--white)', padding: 14 }}
+              >
+                <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'baseline' }}>
+                  <div style={{ fontFamily: 'var(--font-family-mono)', fontSize: 12, color: 'var(--dark-grey)' }}>
+                    <div><strong>{x.name}</strong> = {x.value}</div>
+                    <div style={{ opacity: 0.8 }}>{`line-height: ${lh} · letter-spacing: ${ls}`}</div>
+                  </div>
+                  <div style={{ fontFamily: 'var(--font-family-base)', fontSize: 12, color: 'var(--dark-grey)' }}>
+                    {key}
+                  </div>
+                </div>
+                <div style={{ marginTop: 10, fontFamily: 'var(--font-family-base)', fontSize: `var(${x.name})`, lineHeight: lh, letterSpacing: ls }}>
+                  The quick brown fox jumps over the lazy dog.
+                </div>
+              </div>
+            );
+          })}
+      </div>
+    </div>
+
+);
+}
+
+<TypographyScale />

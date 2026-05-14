@@ -1,0 +1,425 @@
+<style>
+  /* ────────────────────────────────────────────────────────────────────────
+     Sidebar — port the lib's design-system aesthetic into Storybook's
+     manager UI. Palette mapped 1:1 to the STC eServices Design System
+     tokens (v1.0). Sidebar rows use a **rounded** purple-100 pill for the
+     selected state (per current spec sheet); the canvas/toolbar chrome
+     remains sharp.
+     Selectors target Storybook 10's stable internal classes; fall back
+     gracefully if any change in future versions.
+     ──────────────────────────────────────────────────────────────────── */
+
+  :root {
+    /* Purple ramp */
+    --stc-purple-100: #e9ccff;
+    --stc-purple-200: #d399ff;
+    --stc-purple-300: #bd66ff;
+    --stc-purple-400: #a733ff;
+    --stc-purple-500: #4f008c;
+
+    /* Grey ramp */
+    --stc-off-white: #fbfbfc;
+    --stc-light-grey: #f7f8f9;
+    --stc-grey:       #e6e9eb;
+    --stc-dark-grey:  #89979f;
+    --stc-black:      #1d252d;
+    --stc-white:      #ffffff;
+
+    /* Accents (status colours straight from the swatch sheet) */
+    --stc-coral-500:   #ff375f;
+    --stc-success-500: #00c48c;
+    --stc-error-500:   #cf2544;
+
+    /* Semantic aliases used below */
+    --stc-primary:         var(--stc-purple-500);
+    --stc-primary-surface: var(--stc-purple-100);
+    --stc-primary-hover:   var(--stc-purple-200);
+
+    /* Sidebar row geometry — rounded pill state matches the v1.0 spec
+       sheet. Tweak in one place and propagate. */
+    --stc-sidebar-row-radius: 6px;
+    --stc-sidebar-row-inset:  8px;
+  }
+
+  /* ── App scaffolding ─────────────────────────────────────────────────── */
+  body,
+  .sidebar-container,
+  [data-side="left"] {
+    background: var(--stc-off-white) !important;
+    font-family:
+      -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+      sans-serif;
+  }
+
+  /* ── Brand header ────────────────────────────────────────────────────── */
+  .sidebar-header,
+  [data-test-id="sidebar-header"] {
+    padding: 14px 16px !important;
+    border-bottom: 1px solid var(--stc-grey);
+    background: var(--stc-white);
+    min-height: 64px;
+  }
+  .sidebar-header a,
+  .sidebar-header > a {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    text-decoration: none !important;
+    color: var(--stc-black) !important;
+  }
+  .sidebar-header img {
+    height: 32px;
+    width: auto;
+    display: block;
+    flex-shrink: 0;
+  }
+  /* Hide the default brand title text node Storybook places next to the
+     image so we can render our own divider + subtitle below. */
+  .sidebar-header a:has(img) > span,
+  .sidebar-header a:has(img) > div {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    overflow: hidden !important;
+    clip: rect(0 0 0 0) !important;
+    white-space: nowrap !important;
+  }
+  /* Divider + wordmark to the right of the stc mark. */
+  .sidebar-header a:has(img)::after {
+    content: "Design System";
+    padding-inline-start: 12px;
+    border-inline-start: 1.5px solid var(--stc-grey);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--stc-black);
+    line-height: 1.2;
+    letter-spacing: -0.1px;
+  }
+
+  /* ── Search field — FIX double border, fully sharp ────────────────────
+     Storybook 10 renders the search as a wrapper `<div>` (sometimes a
+     `<form>`) around a real `<input>`. Both layers can paint a border,
+     AND a `:focus-within` state on the wrapper draws a pink/magenta ring
+     via `box-shadow` + `outline`. We zero everything on the wrapper and
+     let the input own the border.
+     ──────────────────────────────────────────────────────────────────── */
+
+  /* Wrapper — strip every visual it could draw */
+  [data-test-id="storybook-explorer-searchfield"],
+  .sidebar-search,
+  .search-field,
+  form[role="search"],
+  form:has(> input[type="search"]) {
+    border: 0 !important;
+    border-radius: 0 !important;
+    outline: 0 !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    padding: 0 !important;
+  }
+  /* Wrapper's focus-within state — kill the pink ring */
+  [data-test-id="storybook-explorer-searchfield"]:focus-within,
+  .sidebar-search:focus-within,
+  .search-field:focus-within,
+  form[role="search"]:focus-within {
+    border: 0 !important;
+    outline: 0 !important;
+    box-shadow: none !important;
+  }
+  /* Any nested wrapper Storybook injects between form and input */
+  [data-test-id="storybook-explorer-searchfield"] > *,
+  .sidebar-search > *,
+  form[role="search"] > * {
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    outline: 0 !important;
+  }
+  /* The input itself — single source of border truth */
+  [data-test-id="storybook-explorer-searchfield"] input,
+  .sidebar-search input,
+  .search-field input,
+  input[type="search"] {
+    border-radius: 0 !important;
+    border: 1px solid var(--stc-grey) !important;
+    background: var(--stc-white) !important;
+    color: var(--stc-black) !important;
+    padding: 8px 12px !important;
+    font-size: 13px !important;
+    box-shadow: none !important;
+    outline: 0 !important;
+    transition:
+      border-color 0.12s ease,
+      box-shadow 0.12s ease !important;
+  }
+  [data-test-id="storybook-explorer-searchfield"] input::placeholder,
+  .sidebar-search input::placeholder,
+  input[type="search"]::placeholder {
+    color: var(--stc-dark-grey) !important;
+  }
+  [data-test-id="storybook-explorer-searchfield"] input:hover,
+  .sidebar-search input:hover,
+  input[type="search"]:hover {
+    border-color: var(--stc-dark-grey) !important;
+  }
+  [data-test-id="storybook-explorer-searchfield"] input:focus,
+  [data-test-id="storybook-explorer-searchfield"] input:focus-visible,
+  .sidebar-search input:focus,
+  input[type="search"]:focus,
+  input[type="search"]:focus-visible {
+    border-color: var(--stc-primary) !important;
+    box-shadow: 0 0 0 2px var(--stc-purple-100) !important;
+    outline: 0 !important;
+  }
+  /* Search shortcut hint chip (⌘K / Ctrl+K) — square it off. */
+  [data-test-id="storybook-explorer-searchfield"] kbd,
+  .sidebar-search kbd {
+    border-radius: 0 !important;
+    border: 1px solid var(--stc-grey) !important;
+    background: var(--stc-light-grey) !important;
+    color: var(--stc-dark-grey) !important;
+    font-size: 11px !important;
+    padding: 1px 5px !important;
+    box-shadow: none !important;
+  }
+
+  /* ── Sidebar items — ROUNDED rows, palette-driven ────────────────────
+     Match the v1.0 spec sheet: rows are inset from the container edges
+     and pick up a `var(--stc-sidebar-row-radius)` corner. No left rail —
+     selection is purely a fill change. */
+  .sidebar-item,
+  [data-nodetype="story"],
+  [data-nodetype="document"],
+  [data-nodetype="group"],
+  [data-nodetype="component"] {
+    border-radius: var(--stc-sidebar-row-radius) !important;
+    padding: 6px 10px !important;
+    margin: 1px var(--stc-sidebar-row-inset) !important;
+    font-size: 13px !important;
+    line-height: 1.4 !important;
+    color: var(--stc-black) !important;
+    transition:
+      background 0.12s ease,
+      color 0.12s ease !important;
+  }
+  .sidebar-item:hover,
+  [data-nodetype="story"]:hover,
+  [data-nodetype="document"]:hover,
+  [data-nodetype="component"]:hover {
+    background: var(--stc-light-grey) !important;
+  }
+
+  /* ── Active item — Purple/100 pill, purple text & icon, no rail ─────── */
+  .sidebar-item[data-selected="true"],
+  [data-selected="true"] {
+    background: var(--stc-primary-surface) !important;
+    color: var(--stc-primary) !important;
+    font-weight: 600 !important;
+  }
+  .sidebar-item[data-selected="true"]:hover,
+  [data-selected="true"]:hover {
+    background: var(--stc-primary-surface) !important;
+  }
+
+  /* ── Group / section titles ──────────────────────────────────────────── */
+  [data-nodetype="root"] > div > span,
+  .sidebar-subheading {
+    text-transform: uppercase !important;
+    letter-spacing: 0.06em !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    color: var(--stc-dark-grey) !important;
+  }
+
+  /* ── Sharp scrollbar ─────────────────────────────────────────────────── */
+  .sidebar-container *::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  .sidebar-container *::-webkit-scrollbar-thumb {
+    background: var(--stc-grey);
+    border-radius: 0;
+  }
+  .sidebar-container *::-webkit-scrollbar-thumb:hover {
+    background: var(--stc-dark-grey);
+  }
+  .sidebar-container *::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  /* ── Hide release-notes / "What's new" chip in sidebar bottom bar ────── */
+  [data-test-id="notification-item"],
+  [aria-label*="release notes" i],
+  [aria-label*="what's new" i],
+  [aria-label*="whats new" i] {
+    display: none !important;
+  }
+
+  /* Hide the bottom-bar "Open in new tab" eject icon (matches setConfig) */
+  button[title="Open canvas in new tab"] {
+    display: none !important;
+  }
+
+  /* ── Toolbar — tighter look, sharp bottom border ─────────────────────── */
+  .css-toolbar,
+  [class*="Toolbar"] {
+    border-bottom: 1px solid var(--stc-grey) !important;
+    border-radius: 0 !important;
+  }
+
+  /* ── Sidebar leading icons — neutral by default, purple on selection ───
+     Storybook 10 styles its leaf icons via inline `color` (e.g.
+     `.css-1omskcr { color: rgb(255, 131, 0) }` for documents, teal for
+     stories) on the `<svg>` element itself. The SVG markup uses
+     `fill="currentColor"` internally, so overriding `color` is enough —
+     we don't need to chase `fill` on every path.
+
+     IMPORTANT: Storybook sometimes wraps the icon as `<a> > <span> > <svg>`
+     rather than `<a> > <svg>`, so we use a descendant combinator (` `)
+     instead of a direct-child one (`>`). The direct-child variant misses
+     the wrapped case and the brand-orange/teal leaks through. */
+  .sidebar-item svg:first-of-type,
+  [data-nodetype="story"] svg:first-of-type,
+  [data-nodetype="document"] svg:first-of-type,
+  [data-nodetype="component"] svg:first-of-type {
+    color: var(--stc-black) !important;
+    opacity: 1 !important;
+  }
+  /* Group folders (Foundations, Utilities, Components) — dark grey chevron */
+  [data-nodetype="root"] svg:first-of-type,
+  [data-nodetype="group"] svg:first-of-type {
+    color: var(--stc-dark-grey) !important;
+  }
+  /* Component nodes (Alert, Button…) — dark grey so they read as section
+     markers, matching the screenshot. */
+  [data-nodetype="component"] svg:first-of-type {
+    color: var(--stc-dark-grey) !important;
+  }
+  /* Active row — leading icon picks up the primary purple. Storybook's
+     own selected rule paints it `rgb(255, 255, 255)` (white-on-dark);
+     we override to purple-on-purple-100. */
+  [data-selected="true"] svg:first-of-type,
+  .sidebar-item[data-selected="true"] svg {
+    color: var(--stc-primary) !important;
+    opacity: 1 !important;
+  }
+
+  /* ── Trailing context-menu button ("…" on hover/selected) ────────────── */
+  .sidebar-item button[aria-label],
+  [data-test-id="context-menu-trigger"],
+  [aria-label*="context menu" i],
+  [aria-label*="more options" i] {
+    background: transparent !important;
+    border: 0 !important;
+    border-radius: var(--stc-sidebar-row-radius) !important;
+    color: var(--stc-dark-grey) !important;
+    padding: 2px 4px !important;
+    box-shadow: none !important;
+  }
+  .sidebar-item button[aria-label] svg,
+  [data-test-id="context-menu-trigger"] svg,
+  [aria-label*="context menu" i] svg,
+  [aria-label*="more options" i] svg {
+    color: var(--stc-dark-grey) !important;
+    fill: currentColor !important;
+    opacity: 0.8;
+  }
+  .sidebar-item button[aria-label]:hover,
+  [data-test-id="context-menu-trigger"]:hover {
+    background: var(--stc-grey) !important;
+    color: var(--stc-black) !important;
+  }
+  /* On the selected row, keep the menu button in-brand. */
+  [data-selected="true"] button[aria-label],
+  [data-selected="true"] [data-test-id="context-menu-trigger"] {
+    color: var(--stc-primary) !important;
+  }
+  [data-selected="true"] button[aria-label] svg,
+  [data-selected="true"] [data-test-id="context-menu-trigger"] svg {
+    color: var(--stc-primary) !important;
+    fill: currentColor !important;
+  }
+
+  /* Belt-and-braces: any decorative pseudo on the active row */
+  [data-selected="true"]::before,
+  [data-selected="true"]::after {
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  /* ── Canvas tabs (Docs/Story/Controls/…) — sharp, purple underline ───── */
+  [role="tab"],
+  [role="tablist"] > button,
+  [role="tablist"] > a,
+  button[role="tab"],
+  a[role="tab"],
+  [data-test-id="tab"],
+  [data-test-id="tablist"] > * {
+    border-radius: 0 !important;
+  }
+  [role="tab"][aria-selected="true"] {
+    color: var(--stc-primary) !important;
+    border-bottom-color: var(--stc-primary) !important;
+  }
+  [role="tab"][aria-selected="true"]::after,
+  button[role="tab"][aria-selected="true"]::after {
+    border-radius: 0 !important;
+    background: var(--stc-primary) !important;
+  }
+
+  /* ── Per-component sidebar icon masks ──────────────────────────────────
+     The asset URLs for these masks live in `manager.ts` where we can
+     interpolate `STORYBOOK_BASE_PATH` (needed for sub-path deploys like
+     `/ds-components-lib-doc`). Keep these structural rules here.
+     Note: `background-color: currentColor` means these icons follow the
+     parent row's text color — neutral when unselected, purple when
+     selected — without needing a separate selector. */
+  [data-item-id^="components-"] > svg:first-of-type,
+  [data-item-id^="components-"] > a > svg:first-of-type,
+  [data-item-id="foundations"] > svg:first-of-type,
+  [data-item-id="foundations"] > a > svg:first-of-type,
+  [data-item-id="utilities"] > svg:first-of-type,
+  [data-item-id="utilities"] > a > svg:first-of-type {
+    background-color: currentColor !important;
+    -webkit-mask-position: center !important;
+            mask-position: center !important;
+    -webkit-mask-size: contain !important;
+            mask-size: contain !important;
+    -webkit-mask-repeat: no-repeat !important;
+            mask-repeat: no-repeat !important;
+  }
+  [data-item-id^="components-"] > svg:first-of-type > *,
+  [data-item-id="foundations"] > svg:first-of-type > *,
+  [data-item-id="utilities"] > svg:first-of-type > * {
+    display: none !important;
+  }
+
+  /* ── Bottom "Run tests" button — sharp, palette-aligned ──────────────── */
+  [data-test-id="run-tests"],
+  button[title*="Run tests" i] {
+    border-radius: 0 !important;
+    border: 1px solid var(--stc-primary) !important;
+    background: var(--stc-white) !important;
+    color: var(--stc-primary) !important;
+    font-weight: 600 !important;
+    padding: 6px 12px !important;
+    transition:
+      background 0.12s ease,
+      color 0.12s ease !important;
+  }
+  [data-test-id="run-tests"]:hover,
+  button[title*="Run tests" i]:hover {
+    background: var(--stc-primary) !important;
+    color: var(--stc-white) !important;
+  }
+
+  /* ── Status dots (test results in sidebar) — map to STC status ramp ──── */
+  [data-test-id="status-icon-success"],
+  [aria-label*="success" i] svg {
+    color: var(--stc-success-500) !important;
+  }
+  [data-test-id="status-icon-error"],
+  [aria-label*="error" i] svg,
+  [aria-label*="failed" i] svg {
+    color: var(--stc-error-500) !important;
+  }
+</style>

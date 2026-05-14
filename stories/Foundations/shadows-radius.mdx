@@ -1,0 +1,38 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Foundations/Shadows & Radius" />
+
+## Shadows & Radius
+
+These tokens are exposed as CSS variables (examples):
+
+- shadows: `--shadow-sm`, `--shadow-md`, `--shadow-lg`
+- radius: `--radius-sm`, `--radius-md`, `--radius-lg`
+
+### Cards
+
+<div
+  style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 16 }}
+>
+  {[
+    { shadow: 'shadow-sm', radius: 'radius-sm' },
+    { shadow: 'shadow-md', radius: 'radius-md' },
+    { shadow: 'shadow-lg', radius: 'radius-lg' },
+  ].map((x) => (
+    <div
+      key={x.shadow}
+      style={{
+        background: 'var(--white)',
+        border: '1px solid rgba(0,0,0,0.08)',
+        borderRadius: `var(--${x.radius})`,
+        boxShadow: `var(--${x.shadow})`,
+        padding: 16,
+        fontFamily: 'var(--font-family-base)',
+        fontSize: 13,
+      }}
+    >
+      <div style={{ fontWeight: 600 }}>{x.shadow}</div>
+      <div style={{ opacity: 0.7 }}>{x.radius}</div>
+    </div>
+  ))}
+</div>

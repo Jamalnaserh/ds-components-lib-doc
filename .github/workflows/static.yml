@@ -1,0 +1,90 @@
+name: Deploy Storybook previews (GitHub Pages)
+
+on:
+  push:
+    branches: ["main"]
+
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: storybook-pages
+  cancel-in-progress: true
+
+env:
+  # Repository root that contains `package.json` for Storybook (doc-only checkout).
+  # For a monorepo with Storybook under `doc/`, set this to `doc` and adjust paths below.
+  DOC_DIR: .
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ env.DOC_DIR }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: ${{ env.DOC_DIR }}/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Resolve the base path once — used for Vite's `base` (via STORYBOOK_BASE_PATH
+      # read in main.ts) AND for manager.ts brand/icon asset URL prefixing.
+      - name: Compute Storybook base path
+        id: base
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            echo "path=/${{ github.event.repository.name }}/pr-${{ github.event.number }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "path=/${{ github.event.repository.name }}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build Storybook
+        env:
+          STORYBOOK_BASE_PATH: ${{ steps.base.outputs.path }}
+        run: npm run build
+
+      - name: Publish to gh-pages (main)
+        if: github.event_name == 'push'
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ${{ env.DOC_DIR }}/storybook-static
+          cname: ""
+          clean: true
+          force_orphan: true
+
+      - name: Publish to gh-pages (PR preview)
+        if: github.event_name == 'pull_request'
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ${{ env.DOC_DIR }}/storybook-static
+          destination_dir: pr-${{ github.event.number }}
+          keep_files: true
+
+      - name: Comment preview URL on PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const pr = context.payload.pull_request.number;
+            const url = `https://${owner}.github.io/${repo}/pr-${pr}/`;
+            const body = `✅ Storybook preview: ${url}`;
+            await github.rest.issues.createComment({ owner, repo, issue_number: pr, body });

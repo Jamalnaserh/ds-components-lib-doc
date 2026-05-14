@@ -1,0 +1,38 @@
+{
+  "name": "ds-components-lib-storybook",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "generate:icons": "node scripts/generate-icon-manifest.mjs",
+    "storybook": "npm run generate:icons && cross-env STORYBOOK_DISABLE_TELEMETRY=1 storybook dev -p 6007",
+    "build": "npm run generate:icons && cross-env STORYBOOK_DISABLE_TELEMETRY=1 storybook build --output-dir storybook-static",
+    "test": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:a11y": "vitest run",
+    "chromatic": "npm run build && chromatic --storybook-build-dir=storybook-static --exit-zero-on-changes"
+  },
+  "devDependencies": {
+    "@chromatic-com/storybook": "^4.0.0",
+    "@storybook/addon-a11y": "^10.3.6",
+    "@storybook/addon-docs": "^10.3.6",
+    "@storybook/addon-vitest": "^10.3.6",
+    "@storybook/web-components-vite": "^10.3.6",
+    "@types/node": "^25.6.0",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitest/browser": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0",
+    "chromatic": "^11.18.0",
+    "cross-env": "^7.0.3",
+    "lit": "^3.2.0",
+    "playwright": "^1.50.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "storybook": "^10.3.6",
+    "typescript": "^5.8.0",
+    "vitest": "^3.0.0"
+  },
+  "dependencies": {
+    "ds-components-lib": "^0.0.12"
+  }
+}

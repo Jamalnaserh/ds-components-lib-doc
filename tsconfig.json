@@ -1,0 +1,7 @@
+{
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "types": ["node"]
+  },
+  "include": ["stories/**/*", ".storybook/**/*", "vitest.config.ts", "scripts/**/*"]
+}

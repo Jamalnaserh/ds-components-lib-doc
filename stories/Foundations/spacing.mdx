@@ -1,0 +1,54 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Foundations/Spacing" />
+
+## Spacing
+
+Spacing tokens are exposed as CSS variables (e.g. `--space-md`) and utilities (e.g. `gap-md`, `p-md`, `mt-lg`).
+
+### Token examples
+
+<div
+  style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 12 }}
+>
+  {['space-2xs', 'space-xs', 'space-sm', 'space-md', 'space-lg', 'space-xl', 'space-2xl'].map(
+    (t) => (
+      <div
+        key={t}
+        style={{
+          border: '1px solid rgba(0,0,0,0.08)',
+          borderRadius: 12,
+          background: 'var(--white)',
+          padding: 12,
+        }}
+      >
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: 12,
+          }}
+        >
+          <div style={{ fontFamily: 'var(--font-family-base)', fontSize: 13 }}>
+            <div style={{ fontWeight: 600 }}>{`--${t}`}</div>
+            <div style={{ opacity: 0.7 }}>{`var(--${t})`}</div>
+          </div>
+          <div
+            style={{ height: 12, width: 120, background: 'rgba(0,0,0,0.06)', borderRadius: 999 }}
+          >
+            <div
+              style={{
+                height: 12,
+                width: `var(--${t})`,
+                maxWidth: 120,
+                background: 'var(--primary)',
+                borderRadius: 999,
+              }}
+            />
+          </div>
+        </div>
+      </div>
+    ),
+  )}
+</div>

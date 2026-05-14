@@ -1,0 +1,198 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Utilities/Overview" />
+
+## Utilities
+
+This library ships **utility classes** generated from design tokens. These are included in `dist/ds-components/ds-components.css`.
+
+### How to use
+
+- **In applications**: include the compiled CSS bundle (or your app’s build output that includes it).
+- **In Storybook**: the preview loads `ds-components.css`, so utilities work out of the box.
+- **Guideline**: prefer utilities for _layout + spacing + small visual tweaks_; prefer components for _structure + interaction_.
+
+### Naming conventions
+
+- **Tokens vs utilities**: design tokens are CSS variables (example: `--space-md`). Utilities are classnames (example: `p-md`).
+- **Directional keys**:
+  - padding: `p`, `px`, `py`, `pt`, `pr`, `pb`, `pl`
+  - margin: `m`, `mx`, `my`, `mt`, `mr`, `mb`, `ml`
+- **Composability**: utilities are meant to stack, e.g. `p-md radius-md shadow-sm bg-white`.
+
+### Color utilities
+
+- **Text**: `.text-{token}` (example: `.text-primary`, `.text-grey`)
+- **Background**: `.bg-{token}` (example: `.bg-off-white`)
+- **Border**: `.border-{token}` (example: `.border-light-grey`)
+
+Tokens come from the DS color tokens (see **Foundations → Colors**).
+
+#### Examples
+
+<div className="p-md radius-md shadow-sm bg-white" style={{ border: '1px solid rgba(0,0,0,0.08)' }}>
+  <div className="fw-semibold text-md mb-xs">Utility colors</div>
+  <div className="text-sm text-dark-grey mb-sm">
+    Mix text/background/border utilities with DS tokens.
+  </div>
+  <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center' }}>
+    <span
+      className="p-xs radius-pill bg-off-white text-dark-grey border-light-grey"
+      style={{ borderWidth: 1, borderStyle: 'solid' }}
+    >
+      Neutral
+    </span>
+    <span className="p-xs radius-pill bg-primary text-white">Primary</span>
+    <span className="p-xs radius-pill bg-success text-white">Success</span>
+    <span className="p-xs radius-pill bg-warning text-black">Warning</span>
+    <span className="p-xs radius-pill bg-danger text-white">Danger</span>
+  </div>
+</div>
+
+### Spacing utilities
+
+Generated from the spacing scale:
+
+- **Padding**: `.p-{k}`, `.px-{k}`, `.py-{k}`, `.pt-{k}`, `.pr-{k}`, `.pb-{k}`, `.pl-{k}`
+- **Margin**: `.m-{k}`, `.mx-{k}`, `.my-{k}`, `.mt-{k}`, `.mr-{k}`, `.mb-{k}`, `.ml-{k}`
+- **Gap**: `.gap-{k}`
+
+Where `{k}` matches the spacing keys (example: `xs`, `sm`, `md`, `lg`, `xl`).
+
+#### Examples
+
+<div style={{ display: 'grid', gap: 12 }}>
+  <div className="p-md radius-md bg-white" style={{ border: '1px solid rgba(0,0,0,0.08)' }}>
+    <div className="fw-semibold text-md mb-xs">Spacing patterns</div>
+    <div className="text-sm text-dark-grey mb-sm">
+      A common “card” stack: padding + gap + optional divider.
+    </div>
+    <div className="p-sm radius-md bg-off-white" style={{ border: '1px dashed rgba(0,0,0,0.12)' }}>
+      <div className="fw-medium text-sm mb-2xs">Section title</div>
+      <div className="text-sm text-dark-grey">Content block</div>
+    </div>
+    <div className="mt-sm" style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+      <ds-button size="small">Action</ds-button>
+      <ds-button size="small" shape="outline" color="primary">
+        Secondary
+      </ds-button>
+    </div>
+  </div>
+</div>
+
+### Typography utilities
+
+- **Font weight**: `.fw-{key}` (example: `.fw-regular`, `.fw-medium`, `.fw-bold`)
+- **Type scale**: `.text-{size}` (example: `.text-md`, `.text-lg`) — uses DS `font-size/line-height/letter-spacing` tokens
+- **Numeric font size**: `.fs-{n}` for \(n = 13–90\) (example: `.fs-20`)
+- **Line height**: `.lh-{key}`
+- **Letter spacing**: `.ls-{key}`
+
+#### Examples
+
+<div className="p-md radius-md bg-white" style={{ border: '1px solid rgba(0,0,0,0.08)' }}>
+  <div className="fw-semibold text-lg">Heading with utilities</div>
+  <div className="text-sm text-dark-grey mt-2xs">
+    This paragraph uses DS typography tokens via utility classes.
+  </div>
+  <div className="mt-sm" style={{ display: 'grid', gap: 8 }}>
+    <div className="fw-medium text-md">Row title</div>
+    <div className="text-sm text-dark-grey">Supporting text (small)</div>
+    <div className="text-sm fw-bold">Bold highlight</div>
+  </div>
+</div>
+
+### Radius / Shadow / Blur utilities
+
+- **Radius**: `.radius-{key}`
+- **Shadow**: `.shadow-{key}`
+- **Blur**: `.blur-{key}` and `.backdrop-blur-{key}`
+
+#### Examples
+
+<div
+  style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 12 }}
+>
+  <div
+    className="p-md radius-sm shadow-sm bg-white"
+    style={{ border: '1px solid rgba(0,0,0,0.08)' }}
+  >
+    <div className="fw-semibold text-md mb-xs">shadow-sm + radius-sm</div>
+    <div className="text-sm text-dark-grey">Good for compact surfaces.</div>
+  </div>
+  <div
+    className="p-md radius-lg shadow-md bg-white"
+    style={{ border: '1px solid rgba(0,0,0,0.08)' }}
+  >
+    <div className="fw-semibold text-md mb-xs">shadow-md + radius-lg</div>
+    <div className="text-sm text-dark-grey">Good for elevated cards / dialogs.</div>
+  </div>
+  <div
+    className="p-md radius-md bg-white"
+    style={{ border: '1px solid rgba(0,0,0,0.08)', position: 'relative', overflow: 'hidden' }}
+  >
+    <div
+      style={{
+        position: 'absolute',
+        inset: 0,
+        background: 'linear-gradient(135deg, rgba(var(--rgb-primary),0.15), rgba(0,0,0,0))',
+      }}
+    />
+    <div style={{ position: 'relative' }} className="backdrop-blur-sm p-sm radius-md">
+      <div className="fw-semibold text-md mb-xs">backdrop-blur-sm</div>
+      <div className="text-sm text-dark-grey">Use for glassy overlays (when supported).</div>
+    </div>
+  </div>
+</div>
+
+### Misc utilities
+
+- **Text ellipsis**: `.text-ellipsis` (single-line truncate)
+- **Screen-reader only**: `.sr-only` / `.visually-hidden`
+- **RTL helpers**: `.flip-rtl` inside `[dir="rtl"]`
+
+#### Text overflow + accessibility
+
+<div className="p-md radius-md bg-white" style={{ border: '1px solid rgba(0,0,0,0.08)' }}>
+  <div className="fw-semibold text-md mb-xs">Text truncation</div>
+  <div className="text-sm text-dark-grey mb-sm">
+    Use <code>.text-ellipsis</code> for single-line truncation.
+  </div>
+  <div className="p-sm radius-md bg-off-white" style={{ maxWidth: 360 }}>
+    <div
+      className="text-ellipsis"
+      title="A very long text that should truncate in a single line to keep layouts stable"
+    >
+      A very long text that should truncate in a single line to keep layouts stable
+    </div>
+  </div>
+  <div className="mt-sm text-sm text-dark-grey">
+    <span className="sr-only">Screen-reader only hint</span>
+    <span aria-hidden="true">Visible label</span>
+  </div>
+</div>
+
+#### RTL helper
+
+<div dir="rtl" className="p-md radius-md bg-white" style={{ border: '1px solid rgba(0,0,0,0.08)' }}>
+  <div className="fw-semibold text-md mb-xs">RTL example</div>
+  <div className="text-sm text-dark-grey mb-sm">
+    <code>.flip-rtl</code> is useful for icons that should mirror in RTL.
+  </div>
+  <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+    <ds-icon class="flip-rtl" icon="arrow-right-2" size="22" base-path="/assets/icon/"></ds-icon>
+    <span className="text-sm">This arrow should visually flip in RTL contexts.</span>
+  </div>
+</div>
+
+### Practical usage example (layout + component)
+
+<div className="p-md radius-md shadow-sm bg-white" style={{ border: '1px solid rgba(0,0,0,0.08)' }}>
+  <div className="fw-semibold text-md mb-xs">Card using utilities</div>
+  <div className="text-sm text-dark-grey">
+    Spacing, radius, shadow and text utilities are applied via classes.
+  </div>
+  <div className="mt-sm">
+    <ds-button size="small">Utility + component</ds-button>
+  </div>
+</div>
