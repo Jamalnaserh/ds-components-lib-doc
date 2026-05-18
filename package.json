@@ -33,6 +33,6 @@
     "vitest": "^3.0.0"
   },
   "dependencies": {
-    "ds-components-lib": "^0.0.14"
+    "ds-components-lib": "^0.0.15"
   }
 }
