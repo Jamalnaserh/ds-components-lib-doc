@@ -29,40 +29,62 @@ function ensureDeployBaseTag(): void {
 
 ensureDeployBaseTag();
 
-const setAssetBasePaths = (): void => {
-  const configure = (tag: string, subpath: string): void => {
-    const Ctor = customElements.get(tag) as
-      | { setBasePath?: (path: string) => void; setPath?: (path: string) => void }
-      | undefined;
-    const absoluteDir = new URL(subpath, deployRoot).href;
-    if (typeof Ctor?.setPath === 'function') {
-      Ctor.setPath(absoluteDir);
-    } else if (typeof Ctor?.setBasePath === 'function') {
-      Ctor.setBasePath(absoluteDir);
-    } else {
-      console.warn(`⚠ ${tag} not registered — skipping base path`);
-    }
-  };
+const ASSET_TAGS: ReadonlyArray<readonly [tag: string, subpath: string]> = [
+  ['ds-icon', 'assets/icon/'],
+  ['ds-logo', 'assets/logo/'],
+  ['ds-flag', 'assets/flag/'],
+];
 
-  configure('ds-icon', 'assets/icon/');
-  configure('ds-logo', 'assets/logo/');
-  configure('ds-flag', 'assets/flag/');
-};
+type StencilCtor =
+  | { setBasePath?: (path: string) => void; setPath?: (path: string) => void }
+  | undefined;
+
+/**
+ * Tracks which tags already had their absolute asset path applied, so repeated
+ * calls (loaders/decorators) are cheap no-ops once a tag is configured — but a
+ * tag that is *not yet registered* is left unmarked so a later call retries it.
+ */
+const configured = new Set<string>();
+
+function applyBasePath(tag: string, subpath: string): boolean {
+  if (configured.has(tag)) return true;
+  const Ctor = customElements.get(tag) as StencilCtor;
+  if (!Ctor) return false; // not registered yet — caller should retry later
+  const absoluteDir = new URL(subpath, deployRoot).href;
+  if (typeof Ctor.setPath === 'function') {
+    Ctor.setPath(absoluteDir);
+  } else if (typeof Ctor.setBasePath === 'function') {
+    Ctor.setBasePath(absoluteDir);
+  } else {
+    // Registered but no path API — nothing more we can do; don't spin forever.
+    configured.add(tag);
+    return true;
+  }
+  configured.add(tag);
+  return true;
+}
+
+/** Apply to every tag that is currently registered. Returns true once all done. */
+function setAssetBasePaths(): boolean {
+  let allDone = true;
+  for (const [tag, subpath] of ASSET_TAGS) {
+    if (!applyBasePath(tag, subpath)) allDone = false;
+  }
+  return allDone;
+}
 
 /**
  * Icons that started loading before `setPath()` used Stencil's `getAssetPath`
  * fallback (`/assets/icon/…`). Re-trigger a fetch after the global path is set.
  */
 function refreshMountedIcons(): void {
-  document.querySelectorAll('ds-icon').forEach((el) => {
-    const icon = el.getAttribute('icon');
-    const name = el.getAttribute('name');
-    if (icon) {
-      el.removeAttribute('icon');
-      el.setAttribute('icon', icon);
-    } else if (name) {
-      el.removeAttribute('name');
-      el.setAttribute('name', name);
+  document.querySelectorAll('ds-icon, ds-logo, ds-flag').forEach((el) => {
+    for (const attr of ['icon', 'name', 'src']) {
+      const val = el.getAttribute(attr);
+      if (val != null) {
+        el.removeAttribute(attr);
+        el.setAttribute(attr, val);
+      }
     }
   });
 }
@@ -77,24 +99,35 @@ function refreshMountedIcons(): void {
  */
 const stencilModuleUrl = new URL('assets/ds-components.js', deployRoot).href;
 
-try {
-  await import(/* @vite-ignore */ stencilModuleUrl);
-  // Set paths in the same turn as registration — before stories paint icons.
+/**
+ * Resolve only once every asset tag is actually defined AND has had its base
+ * path set. The Stencil esm bundle self-registers asynchronously, so awaiting
+ * the import is *not* enough — we must await `whenDefined` for each tag, then
+ * set the path before any story paints an icon.
+ */
+async function bootstrapStencil(): Promise<void> {
+  try {
+    await import(/* @vite-ignore */ stencilModuleUrl);
+    console.log('✓ Stencil module imported from', stencilModuleUrl);
+  } catch (e) {
+    console.error('✗ Failed to load Stencil components:', e);
+    return;
+  }
+
+  // Wait for the components to genuinely register before touching the
+  // constructor. This is what was missing — `customElements.get()` was
+  // `undefined` at call time, so every early `setPath()` was skipped and
+  // icons fell back to the site-root path → 404.
+  await Promise.all(
+    ASSET_TAGS.map(([tag]) => customElements.whenDefined(tag)),
+  );
+
   setAssetBasePaths();
-  console.log('✓ Stencil components loaded from', stencilModuleUrl);
+  refreshMountedIcons();
   console.log('✓ Asset base paths configured (deploy root):', deployRoot);
-} catch (e) {
-  console.error('✗ Failed to load Stencil components:', e);
 }
 
-await Promise.all([
-  customElements.whenDefined('ds-icon'),
-  customElements.whenDefined('ds-logo'),
-  customElements.whenDefined('ds-flag'),
-]);
-
-// Belt-and-suspenders after custom elements are fully defined.
-setAssetBasePaths();
+const stencilReady = bootstrapStencil();
 
 (() => {
   const stylesheetHref = new URL('ds-components/ds-components.css', deployRoot).href;
@@ -110,13 +143,16 @@ setAssetBasePaths();
 const preview: Preview = {
   tags: ['autodocs'],
   loaders: [
+    // Block every story's first paint until Stencil is registered and the
+    // asset base path is set. This is the key ordering guarantee.
     async () => {
-      setAssetBasePaths();
+      await stencilReady;
       return {};
     },
   ],
   decorators: [
     (story) => {
+      // Cheap no-op once configured; retries any tag not yet registered.
       setAssetBasePaths();
       const rendered = story();
       requestAnimationFrame(() => {
