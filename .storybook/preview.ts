@@ -14,6 +14,59 @@ function getDeployRoot(): string {
 
 const deployRoot = getDeployRoot();
 
+/** Align `<base href>` so Stencil path helpers resolve under the gh-pages subpath. */
+function ensureDeployBaseTag(): void {
+  const existing = document.querySelector('base[data-ds-storybook-base]');
+  if (existing) {
+    existing.setAttribute('href', deployRoot);
+    return;
+  }
+  const base = document.createElement('base');
+  base.setAttribute('data-ds-storybook-base', '');
+  base.href = deployRoot;
+  document.head.prepend(base);
+}
+
+ensureDeployBaseTag();
+
+const setAssetBasePaths = (): void => {
+  const configure = (tag: string, subpath: string): void => {
+    const Ctor = customElements.get(tag) as
+      | { setBasePath?: (path: string) => void; setPath?: (path: string) => void }
+      | undefined;
+    const absoluteDir = new URL(subpath, deployRoot).href;
+    if (typeof Ctor?.setPath === 'function') {
+      Ctor.setPath(absoluteDir);
+    } else if (typeof Ctor?.setBasePath === 'function') {
+      Ctor.setBasePath(absoluteDir);
+    } else {
+      console.warn(`⚠ ${tag} not registered — skipping base path`);
+    }
+  };
+
+  configure('ds-icon', 'assets/icon/');
+  configure('ds-logo', 'assets/logo/');
+  configure('ds-flag', 'assets/flag/');
+};
+
+/**
+ * Icons that started loading before `setPath()` used Stencil's `getAssetPath`
+ * fallback (`/assets/icon/…`). Re-trigger a fetch after the global path is set.
+ */
+function refreshMountedIcons(): void {
+  document.querySelectorAll('ds-icon').forEach((el) => {
+    const icon = el.getAttribute('icon');
+    const name = el.getAttribute('name');
+    if (icon) {
+      el.removeAttribute('icon');
+      el.setAttribute('icon', icon);
+    } else if (name) {
+      el.removeAttribute('name');
+      el.setAttribute('name', name);
+    }
+  });
+}
+
 /**
  * Load Stencil from the static `/assets/` tree (see `staticDirs` in main.ts).
  *
@@ -26,25 +79,13 @@ const stencilModuleUrl = new URL('assets/ds-components.js', deployRoot).href;
 
 try {
   await import(/* @vite-ignore */ stencilModuleUrl);
+  // Set paths in the same turn as registration — before stories paint icons.
+  setAssetBasePaths();
   console.log('✓ Stencil components loaded from', stencilModuleUrl);
+  console.log('✓ Asset base paths configured (deploy root):', deployRoot);
 } catch (e) {
   console.error('✗ Failed to load Stencil components:', e);
 }
-
-const setAssetBasePaths = (): void => {
-  const configure = (tag: string, subpath: string): void => {
-    const Ctor = customElements.get(tag) as { setBasePath?: (path: string) => void } | undefined;
-    if (!Ctor?.setBasePath) {
-      console.warn(`⚠ ${tag} not registered — skipping base path`);
-      return;
-    }
-    Ctor.setBasePath(new URL(subpath, deployRoot).href);
-  };
-
-  configure('ds-icon', 'assets/icon/');
-  configure('ds-logo', 'assets/logo/');
-  configure('ds-flag', 'assets/flag/');
-};
 
 await Promise.all([
   customElements.whenDefined('ds-icon'),
@@ -52,8 +93,8 @@ await Promise.all([
   customElements.whenDefined('ds-flag'),
 ]);
 
+// Belt-and-suspenders after custom elements are fully defined.
 setAssetBasePaths();
-console.log('✓ Asset base paths configured (deploy root):', deployRoot);
 
 (() => {
   const stylesheetHref = new URL('ds-components/ds-components.css', deployRoot).href;
@@ -68,6 +109,22 @@ console.log('✓ Asset base paths configured (deploy root):', deployRoot);
 
 const preview: Preview = {
   tags: ['autodocs'],
+  loaders: [
+    async () => {
+      setAssetBasePaths();
+      return {};
+    },
+  ],
+  decorators: [
+    (story) => {
+      setAssetBasePaths();
+      const rendered = story();
+      requestAnimationFrame(() => {
+        refreshMountedIcons();
+      });
+      return rendered;
+    },
+  ],
   parameters: {
     controls: { expanded: true },
     options: {
