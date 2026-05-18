@@ -56,7 +56,7 @@ jobs:
       - name: Build Storybook
         env:
           STORYBOOK_BASE_PATH: ${{ steps.base.outputs.path }}
-        run: npm run build
+        run: NODE_ENV=production npm run build
 
       - name: Publish to gh-pages (main)
         if: github.event_name == 'push'
