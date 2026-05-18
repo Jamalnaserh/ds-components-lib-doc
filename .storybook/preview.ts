@@ -39,7 +39,7 @@ void (async () => {
   DsIcon?.setBasePath?.(new URL('assets/icon/', baseUri).toString());
   DsLogo?.setBasePath?.(new URL('assets/logo/', baseUri).toString());
   DsFlag?.setBasePath?.(new URL('assets/flag/', baseUri).toString());
-  
+
   console.log('✓ Base paths configured for ds-icon, ds-logo, ds-flag');
 })();
 
