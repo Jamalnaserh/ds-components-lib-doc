@@ -1,53 +1,51 @@
-import { defineCustomElements } from 'ds-components-lib/loader';
+import type { Preview } from '@storybook/web-components-vite';
 
-// Add error handling for defineCustomElements
+/**
+ * Load Stencil from the static `/assets/` tree (see `staticDirs` in main.ts).
+ *
+ * Do NOT `import from 'ds-components-lib/loader'` here. Vite would bundle a
+ * second copy of the Stencil runtime into the iframe while lazy-loaded
+ * `*.entry.js` chunks import `./index-*.js` from `/assets/`, which breaks
+ * `<Host>` detection and surfaces as createElementNS('[object Object]').
+ */
+const stencilModuleUrl = new URL('assets/ds-components.js', document.baseURI).href;
+
 try {
-  defineCustomElements();
-  console.log('✓ Custom elements loaded successfully');
+  await import(/* @vite-ignore */ stencilModuleUrl);
+  console.log('✓ Stencil components loaded from', stencilModuleUrl);
 } catch (e) {
-  console.error('✗ Failed to load custom elements:', e);
+  console.error('✗ Failed to load Stencil components:', e);
 }
 
-const trySetBasePaths = () => {
-  const DsIcon = customElements.get('ds-icon');
-  const DsLogo = customElements.get('ds-logo');
-  const DsFlag = customElements.get('ds-flag');
+const setAssetBasePaths = (): void => {
+  const baseUri = document.baseURI;
 
-  if (!DsIcon) console.warn('⚠ ds-icon not registered');
-  if (!DsLogo) console.warn('⚠ ds-logo not registered');
-  if (!DsFlag) console.warn('⚠ ds-flag not registered');
+  const configure = (tag: string, subpath: string): void => {
+    const Ctor = customElements.get(tag) as { setBasePath?: (path: string) => void } | undefined;
+    if (!Ctor?.setBasePath) {
+      console.warn(`⚠ ${tag} not registered — skipping base path`);
+      return;
+    }
+    Ctor.setBasePath(new URL(subpath, baseUri).href);
+  };
 
-  const baseUri = globalThis.document?.baseURI ?? '/';
-  DsIcon?.setBasePath?.(new URL('assets/icon/', baseUri).toString());
-  DsLogo?.setBasePath?.(new URL('assets/logo/', baseUri).toString());
-  DsFlag?.setBasePath?.(new URL('assets/flag/', baseUri).toString());
+  configure('ds-icon', 'assets/icon/');
+  configure('ds-logo', 'assets/logo/');
+  configure('ds-flag', 'assets/flag/');
 };
 
-// Prefer synchronous base-path setup so early-rendered icons use the correct
-// asset URLs in Storybook.
-trySetBasePaths();
+await Promise.all([
+  customElements.whenDefined('ds-icon'),
+  customElements.whenDefined('ds-logo'),
+  customElements.whenDefined('ds-flag'),
+]);
 
-// Fallback: if elements are defined slightly after this file runs, wait for them.
-void (async () => {
-  const [DsIcon, DsLogo, DsFlag] = await Promise.all([
-    customElements.whenDefined('ds-icon'),
-    customElements.whenDefined('ds-logo'),
-    customElements.whenDefined('ds-flag'),
-  ]);
-
-  const baseUri = globalThis.document?.baseURI ?? '/';
-  DsIcon?.setBasePath?.(new URL('assets/icon/', baseUri).toString());
-  DsLogo?.setBasePath?.(new URL('assets/logo/', baseUri).toString());
-  DsFlag?.setBasePath?.(new URL('assets/flag/', baseUri).toString());
-
-  console.log('✓ Base paths configured for ds-icon, ds-logo, ds-flag');
-})();
+setAssetBasePaths();
+console.log('✓ Asset base paths configured for ds-icon, ds-logo, ds-flag');
 
 (() => {
-  const baseUri = globalThis.document?.baseURI ?? '/';
-  const href = new URL('ds-components/ds-components.css', baseUri).pathname;
-  const existing = document.querySelector(`link[href="${href}"]`);
-  if (!existing) {
+  const href = new URL('ds-components/ds-components.css', document.baseURI).pathname;
+  if (!document.querySelector(`link[href="${href}"]`)) {
     const link = document.createElement('link');
     link.rel = 'stylesheet';
     link.href = href;
@@ -56,7 +54,7 @@ void (async () => {
   }
 })();
 
-const preview = {
+const preview: Preview = {
   tags: ['autodocs'],
   parameters: {
     controls: { expanded: true },
@@ -74,21 +72,7 @@ const preview = {
       ],
     },
     a11y: {
-      // `'error'` makes the addon fail Storybook's test runs whenever
-      // axe-core surfaces a violation. Individual stories that still need
-      // grace can opt back to `'todo'` (warn only) or `'off'`.
       test: 'error',
-      // Catalogue-level rule relaxations. These remain visible in the a11y
-      // panel as warnings but do not fail the suite, because:
-      //   • `color-contrast` — design-system swatch & caption pages
-      //     intentionally display low-contrast tokens (e.g. `--dark-grey`
-      //     against `--white`) so consumers can see what each token looks
-      //     like. Treat in real apps.
-      //   • `landmark-unique` — many stories render multiple variants of
-      //     the same component (e.g. several breadcrumbs side by side),
-      //     each generating an identical `<nav aria-label>` landmark.
-      // To re-enable on a per-story basis:
-      //   parameters: { a11y: { config: { rules: [{ id: 'color-contrast', enabled: true }] } } }
       config: {
         rules: [
           { id: 'color-contrast', enabled: false },

@@ -110,6 +110,12 @@ const config: StorybookConfig = {
           'react-dom',
           '@storybook/addon-docs/blocks',
         ],
+        // Never pre-bundle the Stencil loader — preview loads `/assets/ds-components.js`.
+        exclude: [
+          ...(cfg.optimizeDeps?.exclude ?? []),
+          'ds-components-lib',
+          'ds-components-lib/loader',
+        ],
       },
       server: {
         ...cfg.server,
