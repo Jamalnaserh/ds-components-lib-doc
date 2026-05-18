@@ -29,65 +29,85 @@ function ensureDeployBaseTag(): void {
 
 ensureDeployBaseTag();
 
-const ASSET_TAGS: ReadonlyArray<readonly [tag: string, subpath: string]> = [
-  ['ds-icon', 'assets/icon/'],
-  ['ds-logo', 'assets/logo/'],
-  ['ds-flag', 'assets/flag/'],
+/**
+ * Absolute asset dirs, computed once against the gh-pages deploy root.
+ *
+ * Why per-element attributes instead of `DsIcon.setPath()`:
+ *
+ *   The components resolve their asset dir as
+ *     instance `path`/`base-path` prop  →  static `setPath()`  →  getAssetPath()
+ *
+ *   The static `setPath()` route is unreliable here. Stencil lazy-loads the
+ *   real `DsIcon` class (`*.entry.js`) only when the first `<ds-icon>` renders,
+ *   so at preview-init time `customElements.get('ds-icon')` is the lazy *proxy*
+ *   constructor, not the implementation class that owns `static _globalPath`.
+ *   `proxy.setPath(...)` is a no-op; `_globalPath` stays `null`; the component
+ *   falls back to `getAssetPath('../../assets/icon/')`, which resolves against
+ *   the bundle's `resourcesUrl` (`/<repo>/assets/`) and climbs two levels to
+ *   `https://<owner>.github.io/assets/icon/…` — the 404 you see.
+ *
+ *   The instance prop has the highest priority and is read at render time, so
+ *   stamping it on every element as it enters the DOM is race-free and immune
+ *   to the bundle/class-identity problem.
+ */
+const ASSET_DIRS = {
+  icon: new URL('assets/icon/', deployRoot).href,
+  logo: new URL('assets/logo/', deployRoot).href,
+  flag: new URL('assets/flag/', deployRoot).href,
+} as const;
+
+/** tag → (attribute that overrides the asset dir, absolute dir value). */
+const PATH_ATTR: ReadonlyArray<readonly [tag: string, attr: string, dir: string]> = [
+  ['ds-icon', 'path', ASSET_DIRS.icon],
+  ['ds-logo', 'base-path', ASSET_DIRS.logo],
+  ['ds-flag', 'base-path', ASSET_DIRS.flag],
 ];
 
-type StencilCtor =
-  | { setBasePath?: (path: string) => void; setPath?: (path: string) => void }
-  | undefined;
-
-/**
- * Tracks which tags already had their absolute asset path applied, so repeated
- * calls (loaders/decorators) are cheap no-ops once a tag is configured — but a
- * tag that is *not yet registered* is left unmarked so a later call retries it.
- */
-const configured = new Set<string>();
-
-function applyBasePath(tag: string, subpath: string): boolean {
-  if (configured.has(tag)) return true;
-  const Ctor = customElements.get(tag) as StencilCtor;
-  if (!Ctor) return false; // not registered yet — caller should retry later
-  const absoluteDir = new URL(subpath, deployRoot).href;
-  if (typeof Ctor.setPath === 'function') {
-    Ctor.setPath(absoluteDir);
-  } else if (typeof Ctor.setBasePath === 'function') {
-    Ctor.setBasePath(absoluteDir);
-  } else {
-    // Registered but no path API — nothing more we can do; don't spin forever.
-    configured.add(tag);
-    return true;
+function stampElement(el: Element): void {
+  const tag = el.tagName.toLowerCase();
+  for (const [t, attr, dir] of PATH_ATTR) {
+    if (t !== tag) continue;
+    if (el.getAttribute(attr) !== dir) {
+      el.setAttribute(attr, dir);
+    }
+    return;
   }
-  configured.add(tag);
-  return true;
 }
 
-/** Apply to every tag that is currently registered. Returns true once all done. */
-function setAssetBasePaths(): boolean {
-  let allDone = true;
-  for (const [tag, subpath] of ASSET_TAGS) {
-    if (!applyBasePath(tag, subpath)) allDone = false;
-  }
-  return allDone;
+/** Stamp everything already in a subtree (the element itself + descendants). */
+function stampTree(root: ParentNode | Element): void {
+  if (root instanceof Element) stampElement(root);
+  root
+    .querySelectorAll?.('ds-icon, ds-logo, ds-flag')
+    .forEach((el) => stampElement(el));
 }
 
 /**
- * Icons that started loading before `setPath()` used Stencil's `getAssetPath`
- * fallback (`/assets/icon/…`). Re-trigger a fetch after the global path is set.
+ * Single observer for the whole iframe document. Stamps the `path`/`base-path`
+ * attribute on each component as soon as it is inserted — before Stencil's
+ * `componentWillLoad` reads it — so the very first fetch already targets the
+ * correct gh-pages subpath. No re-fetch / cache-bust needed.
  */
-function refreshMountedIcons(): void {
-  document.querySelectorAll('ds-icon, ds-logo, ds-flag').forEach((el) => {
-    for (const attr of ['icon', 'name', 'src']) {
-      const val = el.getAttribute(attr);
-      if (val != null) {
-        el.removeAttribute(attr);
-        el.setAttribute(attr, val);
-      }
+let observer: MutationObserver | undefined;
+function startObserver(): void {
+  if (observer) return;
+  stampTree(document); // anything already present
+  observer = new MutationObserver((mutations) => {
+    for (const m of mutations) {
+      m.addedNodes.forEach((node) => {
+        if (node.nodeType === Node.ELEMENT_NODE) {
+          stampTree(node as Element);
+        }
+      });
     }
   });
+  observer.observe(document.documentElement, {
+    childList: true,
+    subtree: true,
+  });
 }
+
+startObserver();
 
 /**
  * Load Stencil from the static `/assets/` tree (see `staticDirs` in main.ts).
@@ -99,12 +119,6 @@ function refreshMountedIcons(): void {
  */
 const stencilModuleUrl = new URL('assets/ds-components.js', deployRoot).href;
 
-/**
- * Resolve only once every asset tag is actually defined AND has had its base
- * path set. The Stencil esm bundle self-registers asynchronously, so awaiting
- * the import is *not* enough — we must await `whenDefined` for each tag, then
- * set the path before any story paints an icon.
- */
 async function bootstrapStencil(): Promise<void> {
   try {
     await import(/* @vite-ignore */ stencilModuleUrl);
@@ -113,18 +127,15 @@ async function bootstrapStencil(): Promise<void> {
     console.error('✗ Failed to load Stencil components:', e);
     return;
   }
-
-  // Wait for the components to genuinely register before touching the
-  // constructor. This is what was missing — `customElements.get()` was
-  // `undefined` at call time, so every early `setPath()` was skipped and
-  // icons fell back to the site-root path → 404.
-  await Promise.all(
-    ASSET_TAGS.map(([tag]) => customElements.whenDefined(tag)),
-  );
-
-  setAssetBasePaths();
-  refreshMountedIcons();
-  console.log('✓ Asset base paths configured (deploy root):', deployRoot);
+  await Promise.all([
+    customElements.whenDefined('ds-icon'),
+    customElements.whenDefined('ds-logo'),
+    customElements.whenDefined('ds-flag'),
+  ]);
+  // Re-stamp once after definition in case any element upgraded before the
+  // observer caught it (defensive; the observer normally wins the race).
+  stampTree(document);
+  console.log('✓ Asset dirs stamped per-element (deploy root):', deployRoot);
 }
 
 const stencilReady = bootstrapStencil();
@@ -143,8 +154,6 @@ const stencilReady = bootstrapStencil();
 const preview: Preview = {
   tags: ['autodocs'],
   loaders: [
-    // Block every story's first paint until Stencil is registered and the
-    // asset base path is set. This is the key ordering guarantee.
     async () => {
       await stencilReady;
       return {};
@@ -152,12 +161,11 @@ const preview: Preview = {
   ],
   decorators: [
     (story) => {
-      // Cheap no-op once configured; retries any tag not yet registered.
-      setAssetBasePaths();
       const rendered = story();
-      requestAnimationFrame(() => {
-        refreshMountedIcons();
-      });
+      // Story markup is built synchronously here but not yet connected; the
+      // observer stamps on insertion. This rAF pass is a belt-and-suspenders
+      // sweep for anything the observer might miss during fast re-renders.
+      requestAnimationFrame(() => stampTree(document));
       return rendered;
     },
   ],
