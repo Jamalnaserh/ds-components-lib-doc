@@ -288,9 +288,13 @@ export const AllIcons: Story = {
       await waitFor(() => {
         const sample = grid.querySelector('ds-icon');
         if (!sample) throw new Error('No icon rendered');
-        expect(sample.getAttribute('width')).toBe('40');
-        expect(sample.getAttribute('height')).toBe('40');
+        expect(sample.getAttribute('size')).toBe('40');
+        expect(sample.classList.contains('fs-40')).toBe(true);
         expect(sample.getAttribute('color')).toBe('primary');
+        const { width, height } = sample.getBoundingClientRect();
+        if (width < 36 || height < 36) {
+          throw new Error(`Icon box too small (${width}×${height}); size control not applied`);
+        }
       });
     });
 
@@ -506,12 +510,14 @@ async function initGallery(root: HTMLElement): Promise<void> {
     const slice = list.slice(start, end);
     const colorAttr = iconColor ? ` color="${escapeHtml(iconColor)}"` : '';
 
+    root.style.setProperty('--ig-icon-size', `${iconSize}px`);
+
     grid.innerHTML = slice.length
       ? slice
           .map(
             (name) =>
               `<button class="ig-card" type="button" title="${escapeHtml(name)}" data-name="${escapeHtml(name)}">` +
-              `<ds-icon icon="${escapeHtml(name)}" width="${iconSize}" height="${iconSize}"${colorAttr}></ds-icon>` +
+              `<ds-icon icon="${escapeHtml(name)}" class="fs-${iconSize}" size="${iconSize}"${colorAttr}></ds-icon>` +
               `<div class="ig-name">${escapeHtml(name)}</div>` +
               `</button>`,
           )
@@ -623,6 +629,9 @@ if (typeof document !== 'undefined' && !document.getElementById('icon-gallery-st
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(108px, 1fr));
       gap: 8px;
+    }
+    .ig-grid ds-icon {
+      font-size: var(--ig-icon-size, 48px);
     }
     .ig-card {
       display: grid;

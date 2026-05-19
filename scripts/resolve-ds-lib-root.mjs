@@ -28,16 +28,16 @@ export function resolveDsComponentsLibRoot() {
 
   let dir = path.dirname(resolvedFile);
   console.log('📍 Starting directory:', dir);
-  
+
   for (let depth = 0; depth < 20; depth++) {
     const pkgPath = path.join(dir, 'package.json');
     console.log(`  [Depth ${depth}] Checking: ${pkgPath}`);
-    
+
     if (fs.existsSync(pkgPath)) {
       try {
         const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
         console.log(`    → Found package.json with name: "${pkg.name}"`);
-        
+
         if (pkg.name === 'ds-components-lib') {
           console.log('✓ Found ds-components-lib root at:', dir);
           return dir;
@@ -46,7 +46,7 @@ export function resolveDsComponentsLibRoot() {
         console.warn(`    → Invalid JSON in ${pkgPath}:`, e.message);
       }
     }
-    
+
     const parent = path.dirname(dir);
     if (parent === dir) {
       console.warn('⚠ Reached filesystem root without finding ds-components-lib');
@@ -55,7 +55,5 @@ export function resolveDsComponentsLibRoot() {
     dir = parent;
   }
 
-  throw new Error(
-    `Could not find ds-components-lib package.json above: ${resolvedFile}`,
-  );
+  throw new Error(`Could not find ds-components-lib package.json above: ${resolvedFile}`);
 }
