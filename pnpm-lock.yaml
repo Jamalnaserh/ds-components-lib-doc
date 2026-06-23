@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       ds-components-lib:
-        specifier: ^0.0.16
-        version: 0.0.16(@popperjs/core@2.11.8)
+        specifier: ^0.0.17
+        version: 0.0.17(@popperjs/core@2.11.8)
     devDependencies:
       '@chromatic-com/storybook':
         specifier: ^4.0.0
@@ -1072,8 +1072,8 @@ packages:
   dom-accessibility-api@0.6.3:
     resolution: {integrity: sha512-7ZgogeTnjuHbo+ct10G9Ffp0mif17idi0IyWNVA/wcwcm7NPOD/WEHVP3n7n3MhXqxoIYm8d6MuZohYWIZ4T3w==}
 
-  ds-components-lib@0.0.16:
-    resolution: {integrity: sha512-fSvXjNPeU3Uzvo6Pr3Xh8Mmkljv2gjCUApbOju/PiZJCfhTNQym/o+KR5+Rf3CYnYKHYLUvI8yxMDXGJ4Y8enA==}
+  ds-components-lib@0.0.17:
+    resolution: {integrity: sha512-0shx1bl0ue1pitgvhiKZdYBT8jUKyDo12iJ3OoVGj8jtUABZ2uEafZHI+KBOoH1ZPcNcIBdY1GAiJ4MbgnG9hQ==}
     engines: {node: '>=18.0.0', npm: '>=9.0.0'}
 
   eastasianwidth@0.2.0:
@@ -2353,7 +2353,7 @@ snapshots:
 
   dom-accessibility-api@0.6.3: {}
 
-  ds-components-lib@0.0.16(@popperjs/core@2.11.8):
+  ds-components-lib@0.0.17(@popperjs/core@2.11.8):
     dependencies:
       bootstrap: 5.3.8(@popperjs/core@2.11.8)
     transitivePeerDependencies:
