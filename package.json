@@ -9,7 +9,8 @@
     "test": "vitest",
     "test:coverage": "vitest run --coverage",
     "test:a11y": "vitest run",
-    "chromatic": "npm run build && chromatic --storybook-build-dir=storybook-static --exit-zero-on-changes"
+    "chromatic": "npm run build && chromatic --storybook-build-dir=storybook-static --exit-zero-on-changes",
+    "push:all": "git push origin main && git push bitbucket main"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^4.0.0",
