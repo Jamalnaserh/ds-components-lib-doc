@@ -16,14 +16,14 @@ npm run build
 From the repo root:
 
 ```bash
-cd storybook
+cd doc
 npm install
 ```
 
 ## Run Storybook
 
 ```bash
-cd storybook
+cd doc
 npm run storybook
 ```
 
@@ -35,11 +35,11 @@ Storybook will:
 ## Build static docs
 
 ```bash
-cd storybook
+cd doc
 npm run build
 ```
 
-Output goes to `storybook/storybook-static/` (default Storybook behavior).
+Output goes to `doc/storybook-static/` (default Storybook behavior).
 
 ## Notes
 

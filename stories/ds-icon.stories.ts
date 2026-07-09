@@ -168,7 +168,7 @@ export const AllIcons: Story = {
     docs: {
       description: {
         story:
-          'Full searchable catalogue of every icon shipped with the library, sourced from the build-time manifest at `/icon-names.json`. Filter by name, change page size, and live-tweak **width / height** and **color** to see how any swatch from the design tokens lands on the catalogue. Use the **Component tests** widget (Interactions ▸ Accessibility) to verify the controls and a11y in one shot.',
+          'Full searchable catalogue of every icon shipped with the library, sourced from the build-time manifest at `/icon-names.json`. Filter by name, change page size, and live-tweak **width / height** and **color** to see how any swatch from the design tokens lands on the catalogue. **Click any icon** to copy its name to the clipboard. Use the **Component tests** widget (Interactions ▸ Accessibility) to verify the controls and a11y in one shot.',
       },
     },
     a11y: { test: 'todo' },
@@ -456,6 +456,31 @@ function escapeHtml(value: string): string {
     .replace(/>/g, '&gt;');
 }
 
+async function copyToClipboard(text: string): Promise<boolean> {
+  try {
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(text);
+      return true;
+    }
+  } catch {
+    // fall through to legacy copy
+  }
+  try {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    const ok = document.execCommand('copy');
+    document.body.removeChild(ta);
+    return ok;
+  } catch {
+    return false;
+  }
+}
+
 async function initGallery(root: HTMLElement): Promise<void> {
   if (root.dataset.igInit === 'true') return;
   root.dataset.igInit = 'true';
@@ -516,7 +541,7 @@ async function initGallery(root: HTMLElement): Promise<void> {
       ? slice
           .map(
             (name) =>
-              `<button class="ig-card" type="button" title="${escapeHtml(name)}" data-name="${escapeHtml(name)}">` +
+              `<button class="ig-card" type="button" title="Copy ${escapeHtml(name)}" aria-label="Copy icon name ${escapeHtml(name)}" data-name="${escapeHtml(name)}">` +
               `<ds-icon icon="${escapeHtml(name)}" class="fs-${iconSize}" size="${iconSize}"${colorAttr}></ds-icon>` +
               `<div class="ig-name">${escapeHtml(name)}</div>` +
               `</button>`,
@@ -561,6 +586,21 @@ async function initGallery(root: HTMLElement): Promise<void> {
   next.addEventListener('click', () => {
     page += 1;
     render();
+  });
+
+  let copiedTimer: ReturnType<typeof setTimeout> | null = null;
+  grid.addEventListener('click', (ev) => {
+    const card = (ev.target as HTMLElement).closest<HTMLElement>('.ig-card');
+    if (!card) return;
+    const name = card.dataset.name;
+    if (!name) return;
+    void copyToClipboard(name).then((ok) => {
+      if (!ok) return;
+      grid.querySelectorAll('.ig-card.is-copied').forEach((c) => c.classList.remove('is-copied'));
+      card.classList.add('is-copied');
+      if (copiedTimer) clearTimeout(copiedTimer);
+      copiedTimer = setTimeout(() => card.classList.remove('is-copied'), 1200);
+    });
   });
 
   render();
@@ -649,6 +689,15 @@ if (typeof document !== 'undefined' && !document.getElementById('icon-gallery-st
       background: var(--white);
       border-color: rgba(var(--rgb-primary), 0.35);
       box-shadow: var(--shadow-sm);
+    }
+    .ig-card.is-copied {
+      border-color: var(--success);
+      background: rgba(var(--rgb-success), 0.08);
+      box-shadow: var(--shadow-sm);
+    }
+    .ig-card.is-copied .ig-name::after {
+      content: ' ✓';
+      color: var(--success);
     }
     .ig-name {
       font-size: 11px;
