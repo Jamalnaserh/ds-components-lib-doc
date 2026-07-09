@@ -1,7 +1,5 @@
 # ui-lib-doc (local docs)
 
-This folder is the **[ui-lib-doc](https://repos.stc.com.sa/projects/NG-GENERAL/repos/ui-lib-doc/browse)** repository, cloned into `doc/` inside the library repo. It runs against the built Stencil output in the parent project.
-
 **Live docs:** [ds-components-lib-doc](https://jamalnaserh.github.io/ds-components-lib-doc/?path=/docs/foundations-colors--docs)
 
 ## First-time setup
