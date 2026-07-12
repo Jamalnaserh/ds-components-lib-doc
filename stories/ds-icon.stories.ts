@@ -16,6 +16,9 @@ const COLOR_TOKENS = [
   'grey-50', 'grey-100', 'grey-200', 'grey-400', 'grey-500',
 ];
 
+/** Semantic `status` values for status-capable icons (`flag`, `star`). */
+const STATUS_TOKENS = ['', 'info', 'success', 'warning', 'danger'] as const;
+
 /** Common square sizes for the “Size scale” story (px). */
 const SIZE_STEPS = [8, 10, 12, 14, 16, 18, 20, 24, 28, 32, 36, 40, 48, 56, 64, 72, 80, 96];
 
@@ -39,6 +42,8 @@ const ICON_COLOR_OPTIONS: { label: string; values: string[] }[] = [
 interface DsIconArgs {
   icon: string;
   color: string;
+  /** Semantic status for `flag` / `star`. Empty = outline. */
+  status: string;
   /** Square shorthand: same as matching `width` and `height`. Omitted when empty. */
   size: string;
   width: string;
@@ -63,6 +68,12 @@ const meta: Meta<DsIconArgs> = {
           'and the SVG follows via `currentColor`. SVGs that ship with hardcoded',
           'fills are rewritten on load (override with `preserve-colors` for',
           'multicolour artwork like flags or logos).',
+          '',
+          '**Status** — on status-capable icons (`flag`, `star`), set',
+          '`status="info"` | `success` | `warning` | `danger` for filled semantic',
+          'artwork. Omit `status` for outline (still follows `color`).',
+          '`status` does **not** change `color` — when set, baked-in status fills',
+          'win and are not rewritten to `currentColor`.',
           '',
           '**Sizing** — set `size` for a square box, or `width` / `height`',
           'independently (numbers → px). `width` / `height` override `size` when',
@@ -91,6 +102,7 @@ const meta: Meta<DsIconArgs> = {
   args: {
     icon: 'check-circle',
     color: 'primary',
+    status: '',
     size: '',
     width: '32',
     height: '32',
@@ -108,7 +120,14 @@ const meta: Meta<DsIconArgs> = {
     color: {
       control: 'select',
       options: COLOR_TOKENS,
-      description: 'Foundation colour token. Empty inherits from parent.',
+      description:
+        'Foundation colour token. Empty inherits from parent. Independent of `status` on flag / star.',
+    },
+    status: {
+      control: 'select',
+      options: [...STATUS_TOKENS],
+      description:
+        'Semantic status for `flag` / `star` (`info` | `success` | `warning` | `danger`). Empty = outline. Does not change `color`.',
     },
     size: {
       control: 'text',
@@ -144,6 +163,7 @@ const meta: Meta<DsIconArgs> = {
     <ds-icon
       icon=${args.icon}
       color=${ifDefined(args.color ? args.color : undefined)}
+      status=${ifDefined(args.status ? args.status : undefined)}
       size=${ifDefined(args.size ? args.size : undefined)}
       width=${ifDefined(args.width ? args.width : undefined)}
       height=${ifDefined(args.height ? args.height : undefined)}
@@ -430,6 +450,102 @@ export const InheritedColor: Story = {
       </a>
     </div>
   `,
+};
+
+export const StatusIcons: Story = {
+  name: 'Status (flag & star)',
+  parameters: {
+    docs: {
+      description: {
+        story: [
+          'Status-capable icons (`flag`, `star`) swap outline artwork for a filled',
+          'semantic colour when `status` is set (`info` | `success` | `warning` | `danger`).',
+          '',
+          'Omit `status` for outline (still follows `color`).',
+          '`status` does **not** change `color` — when both are set, status paint wins.',
+        ].join('\n'),
+      },
+    },
+  },
+  render: () => html`
+    <div style="display:grid; gap:24px;">
+      <div>
+        <p style="margin:0 0 12px; font-size:13px; color: var(--dark-grey);">
+          <strong>Flag</strong> — outline vs semantic status
+        </p>
+        <div
+          style="display:grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap:12px;"
+        >
+          <div style="display:flex; flex-direction:column; align-items:center; gap:8px; padding:12px; border-radius:10px; border:1px solid rgba(0,0,0,0.08); background:rgba(0,0,0,0.02);">
+            <ds-icon icon="flag" size="32" color="dark-grey"></ds-icon>
+            <code style="font-size:11px; color: var(--dark-grey); text-align:center;">outline</code>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:8px; padding:12px; border-radius:10px; border:1px solid rgba(0,0,0,0.08); background:rgba(0,0,0,0.02);">
+            <ds-icon icon="flag" size="32" status="info"></ds-icon>
+            <code style="font-size:11px; color: var(--dark-grey); text-align:center;">status="info"</code>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:8px; padding:12px; border-radius:10px; border:1px solid rgba(0,0,0,0.08); background:rgba(0,0,0,0.02);">
+            <ds-icon icon="flag" size="32" status="warning"></ds-icon>
+            <code style="font-size:11px; color: var(--dark-grey); text-align:center;">status="warning"</code>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:8px; padding:12px; border-radius:10px; border:1px solid rgba(0,0,0,0.08); background:rgba(0,0,0,0.02);">
+            <ds-icon icon="flag" size="32" status="danger"></ds-icon>
+            <code style="font-size:11px; color: var(--dark-grey); text-align:center;">status="danger"</code>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:8px; padding:12px; border-radius:10px; border:1px solid rgba(0,0,0,0.08); background:rgba(0,0,0,0.02);">
+            <ds-icon icon="flag" size="32" status="success"></ds-icon>
+            <code style="font-size:11px; color: var(--dark-grey); text-align:center;">status="success"</code>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <p style="margin:0 0 12px; font-size:13px; color: var(--dark-grey);">
+          <strong>Star</strong> — outline vs status
+        </p>
+        <div
+          style="display:grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap:12px;"
+        >
+          <div style="display:flex; flex-direction:column; align-items:center; gap:8px; padding:12px; border-radius:10px; border:1px solid rgba(0,0,0,0.08); background:rgba(0,0,0,0.02);">
+            <ds-icon icon="star" size="32" color="dark-grey"></ds-icon>
+            <code style="font-size:11px; color: var(--dark-grey); text-align:center;">outline</code>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:8px; padding:12px; border-radius:10px; border:1px solid rgba(0,0,0,0.08); background:rgba(0,0,0,0.02);">
+            <ds-icon icon="star" size="32" status="warning"></ds-icon>
+            <code style="font-size:11px; color: var(--dark-grey); text-align:center;">status="warning"</code>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:8px; padding:12px; border-radius:10px; border:1px solid rgba(0,0,0,0.08); background:rgba(0,0,0,0.02);">
+            <ds-icon icon="star" size="32" status="info"></ds-icon>
+            <code style="font-size:11px; color: var(--dark-grey); text-align:center;">status="info"</code>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:8px; padding:12px; border-radius:10px; border:1px solid rgba(0,0,0,0.08); background:rgba(0,0,0,0.02);">
+            <ds-icon icon="star" size="32" status="warning" color="primary"></ds-icon>
+            <code style="font-size:11px; color: var(--dark-grey); text-align:center;">status + color<br />(status wins)</code>
+          </div>
+        </div>
+      </div>
+    </div>
+  `,
+};
+
+export const StatusPlayground: Story = {
+  name: 'Status playground',
+  args: {
+    icon: 'flag',
+    color: 'dark-grey',
+    status: 'info',
+    size: '32',
+    width: '',
+    height: '',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Try `icon` as `flag` or `star` and toggle `status` in Controls. Clear `status` to see outline + `color`.',
+      },
+    },
+  },
 };
 
 // ─── All icons: full searchable + paginated catalogue ──────────────────────
