@@ -1,0 +1,61 @@
+.custom-breadcrumb {
+  --breadcrumb-fc: var(--dark-gray);
+  --breadcrumb-fs: 11px;
+  --breadcrumb-fw: var(--font-regular);
+  --breadcrumb-fc-active: var(--balck);
+  --breadcrumb-fs-active: 11px;
+  --breadcrumb-fw-active: var(--font-regular);
+  --breadcrumb-gap: 0.5rem;
+  --breadcrumb-divider: "\ea2e";
+
+  padding: 0;
+  margin: 0;
+
+  ol {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    gap: var(--breadcrumb-gap);
+
+    li {
+      display: flex;
+      align-items: center;
+      gap: var(--breadcrumb-gap, 0.75rem);
+
+      &::after {
+        content: var(--breadcrumb-divider);
+        font-family: stc-font-icons;
+        font-size: var(--breadcrumb-fs);
+        color: var(--breadcrumb-fc);
+        display: inline-block;
+
+        [dir="rtl"] & {
+          transform: rotate(180deg);
+        }
+      }
+
+      > a,
+      > span {
+        color: var(--breadcrumb-fc);
+        font-size: var(--breadcrumb-fs);
+        font-weight: var(--breadcrumb-fw);
+        text-decoration: none;
+      }
+
+      a:hover,
+      a:focus {
+        // text-decoration: underline
+      }
+
+      &.active {
+        --breadcrumb-fc: var(--breadcrumb-fs-active);
+        --breadcrumb-fs: var(--breadcrumb-fs-active);
+        --breadcrumb-fw: var(--breadcrumb-fs-active);
+        --breadcrumb-divider: none;
+      }
+    }
+  }
+}

@@ -1,0 +1,358 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// documentation/_dashboard-page.scss
+// Styles exclusive to the Dashboard example page.
+// Extracted from the large inline <style> block in the original dashboard.pug.
+// ─────────────────────────────────────────────────────────────────────────────
+
+// ── Tab bar ────────────────────────────────────────────────────────────────
+.dash-tabs {
+  display: flex;
+  gap: 0.25rem;
+  padding: 0 0 1.25rem;
+  border-bottom: 1px solid var(--ds-border, #ebebeb);
+  flex-wrap: wrap;
+}
+
+.dash-tab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.875rem;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  background: transparent;
+  font-family: inherit;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--ds-text-secondary, #8399af);
+  cursor: pointer;
+  transition:
+    background 0.15s,
+    color 0.15s,
+    border-color 0.15s;
+  white-space: nowrap;
+
+  &:hover {
+    background: var(--ds-surface-hover, #f3f3f1);
+    color: var(--ds-text, #1d252d);
+  }
+
+  &--active {
+    background: #ede6f4;
+    color: #4f008c;
+    border-color: #d399ff;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--ds-focus-ring, #4f008c);
+    outline-offset: 2px;
+  }
+}
+
+// ── Tab panels ─────────────────────────────────────────────────────────────
+.dash-panel {
+  display: none;
+  padding-top: 1.75rem;
+
+  &--active {
+    display: block;
+  }
+
+  // When using the HTML `hidden` attribute
+  &[hidden] {
+    display: none !important;
+  }
+}
+
+// ── Overview: stat cards ───────────────────────────────────────────────────
+.overview-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0 2rem;
+}
+
+.stat-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.875rem;
+  padding: 1.25rem;
+  border-radius: 12px;
+  border: 1px solid var(--ds-border, #ebebeb);
+  background: #fff;
+  transition: box-shadow 0.15s;
+
+  &:hover {
+    box-shadow: 0 4px 16px rgb(79 0 140 / 8%);
+  }
+}
+
+.stat-card__icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 8px;
+  background: #ede6f4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 1.25rem;
+}
+
+.stat-card__name {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--ds-text, #1d252d);
+  margin-bottom: 0.2rem;
+}
+
+.stat-card__desc {
+  font-size: 0.75rem;
+  color: var(--ds-text-secondary, #8399af);
+  margin-bottom: 0.5rem;
+}
+
+.stat-card__count {
+  display: inline-block;
+  padding: 0.125rem 0.5rem;
+  border-radius: 999px;
+  background: #ede6f4;
+  color: #4f008c;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+// ── Quick nav ──────────────────────────────────────────────────────────────
+.quick-nav {
+  margin-top: 2rem;
+}
+
+.quick-nav__title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ds-text, #1d252d);
+  margin-bottom: 0.75rem;
+}
+
+.quick-nav__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+  gap: 0.75rem;
+}
+
+.quick-nav__item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  border: 1px solid var(--ds-border, #ebebeb);
+  background: #fff;
+  font-family: inherit;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #4f008c;
+  cursor: pointer;
+  text-decoration: none;
+  transition:
+    background 0.15s,
+    box-shadow 0.15s;
+
+  span {
+    flex: 1;
+  }
+
+  &:hover {
+    background: #ede6f4;
+    box-shadow: 0 2px 8px rgb(79 0 140 / 10%);
+  }
+}
+
+// ── Colors panel: swatches ─────────────────────────────────────────────────
+.dash-swatch-group {
+  margin-bottom: 2rem;
+}
+
+.dash-swatch-group__title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ds-text, #1d252d);
+  margin-bottom: 0.75rem;
+}
+
+.dash-swatch-row {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.dash-swatch {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  cursor: pointer;
+
+  &:hover .dash-swatch__color {
+    transform: scale(1.08);
+  }
+}
+
+.dash-swatch__color {
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 10px;
+  border: 1px solid rgb(0 0 0 / 8%);
+  transition: transform 0.15s;
+}
+
+.dash-swatch__name {
+  font-size: 0.6875rem;
+  color: var(--ds-text-secondary, #8399af);
+  text-align: center;
+}
+
+.dash-swatch__hex {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: var(--ds-text, #1d252d);
+  font-family: monospace;
+}
+
+// ── Typography panel ───────────────────────────────────────────────────────
+.dash-type-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th {
+    text-align: start;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--ds-text-secondary, #8399af);
+    padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid var(--ds-border, #ebebeb);
+  }
+
+  td {
+    padding: 0.75rem;
+    border-bottom: 1px solid var(--ds-border, #ebebeb);
+    vertical-align: middle;
+  }
+
+  tr:last-child td {
+    border-bottom: none;
+  }
+
+  .dash-sample {
+    color: var(--ds-text, #1d252d);
+  }
+}
+
+// ── Spacing panel ──────────────────────────────────────────────────────────
+.dash-spacing-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--ds-border, #ebebeb);
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.dash-spacing-label {
+  width: 9rem;
+  font-size: 0.75rem;
+  color: var(--ds-text-secondary, #8399af);
+}
+
+.dash-spacing-val {
+  width: 3rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--ds-text, #1d252d);
+}
+
+.dash-spacing-bar {
+  height: 1rem;
+  border-radius: 4px;
+  background: #ede6f4;
+}
+
+// ── Shadows panel ──────────────────────────────────────────────────────────
+.dash-shadow-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
+  gap: 1rem;
+  padding-top: 0.5rem;
+}
+
+.dash-shadow-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  border: 1px solid var(--ds-border, #ebebeb);
+  background: #fff;
+}
+
+.dash-shadow-card__swatch {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 0.5rem;
+  background: #fff;
+  border: 1px solid rgb(0 0 0 / 6%);
+}
+
+.dash-shadow-card__name {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--ds-text, #1d252d);
+}
+
+.dash-shadow-card__val {
+  font-size: 0.625rem;
+  color: var(--ds-text-secondary, #8399af);
+  text-align: center;
+  font-family: "Courier New", monospace;
+  word-break: break-all;
+}
+
+// ── Icons panel ────────────────────────────────────────────────────────────
+.dash-icons-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(5.5rem, 1fr));
+  gap: 0.75rem;
+  padding-top: 0.5rem;
+}
+
+.dash-icon-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.875rem 0.5rem;
+  border-radius: 0.625rem;
+  border: 1px solid var(--ds-border, #ebebeb);
+  background: #fff;
+  cursor: pointer;
+  transition:
+    background 0.12s,
+    border-color 0.12s;
+
+  &:hover {
+    background: #ede6f4;
+    border-color: #d3b8e8;
+  }
+}
+
+.dash-icon-card__name {
+  font-size: 0.5625rem;
+  color: var(--ds-text-secondary, #8399af);
+  text-align: center;
+  word-break: break-word;
+  line-height: 1.3;
+}

@@ -1,0 +1,11 @@
+<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+<path d="M2.36975 8.64062L4.97717 11.9875L8.32402 9.38004" stroke="currentColor" fill="none"/>
+<mask id="mask0_283_3674" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="2" y="2" width="20" height="19">
+<path d="M22 21L13 12H2V2H22V21Z" fill="currentColor"/>
+</mask>
+<g mask="url(#mask0_283_3674)">
+<circle cx="13" cy="12" r="8" stroke="currentColor" fill="none"/>
+</g>
+<line x1="6" y1="17.5" x2="15" y2="17.5" stroke="currentColor"/>
+<line x1="10.5" y1="13" x2="10.5" y2="22" stroke="currentColor"/>
+</svg>

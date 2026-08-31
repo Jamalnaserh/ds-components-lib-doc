@@ -1,0 +1,136 @@
+.toast-container .ngx-toastr {
+  top: 62px;
+  width: auto !important;
+  min-width: 320px;
+  max-width: 320px;
+  min-height: 82px;
+  padding: 1rem !important;
+  border-radius: 0 !important;
+  background-color: var(--white) !important;
+  color: var(--black) !important;
+  height: auto;
+  border: 0;
+  margin: 0 0 10px !important;
+  display: flex !important;
+  flex-direction: column;
+  grid-gap: 0.5rem;
+
+  // align-items: center;
+  border-left: 7px solid transparent;
+  box-shadow: 0 13px 26px rgb(0 0 0 / 11%) !important;
+
+  [dir="rtl"] & {
+    border-left: 0;
+    border-left: 7px solid transparent;
+  }
+
+  .toast-close-button {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    float: none;
+    font-size: 20px;
+    color: var(--black);
+    text-shadow: none;
+
+    /* opacity: 0.8; */
+    font-weight: 400;
+
+    [dir="rtl"] & {
+      right: auto;
+      left: 10px;
+    }
+  }
+
+  .toast-message,
+  .toastr_message {
+    color: var(--black);
+    font-weight: var(--font-regular);
+    font-size: 0.85rem;
+    margin-left: 42px;
+
+    [dir="rtl"] & {
+      margin-left: 0;
+      margin-right: 42px;
+    }
+  }
+
+  .toast-title,
+  .toastr_title {
+    color: var(--black);
+    font-weight: var(--font-medium);
+    font-size: 0.85rem;
+    margin: 0 10px;
+    display: flex;
+    align-items: center;
+
+    &::before {
+      content: "";
+      font-family: stc-font-icons;
+      min-width: 22px;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      font-size: 16px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+      margin-right: 10px;
+      color: var(--white);
+
+      [dir="rtl"] & {
+        margin-right: 0;
+        margin-left: 10px;
+      }
+    }
+  }
+
+  &.toast-success {
+    border-color: var(--green) !important;
+
+    .toast-title,
+    .toastr_title {
+      &::before {
+        content: "\e935";
+        background-color: var(--green);
+      }
+    }
+  }
+
+  &.toast-error {
+    border-color: var(--red) !important;
+
+    .toast-title,
+    .toastr_title {
+      &::before {
+        content: "\e93f";
+        background-color: var(--red);
+      }
+    }
+  }
+
+  &.toast-warning {
+    border-color: var(--yellow) !important;
+
+    .toast-title,
+    .toastr_title {
+      &::before {
+        content: "\ea22";
+        background-color: var(--yellow);
+      }
+    }
+  }
+
+  &.toast-info {
+    background-color: var(--sea-light);
+
+    .toast-title,
+    .toastr_title {
+      &::before {
+        content: "\e988";
+        background-color: var(--sea-light);
+      }
+    }
+  }
+}

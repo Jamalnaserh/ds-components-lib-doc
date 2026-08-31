@@ -1,0 +1,109 @@
+.table-responsive {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+
+  table, .primary-table {
+    --th-height: var(--default-size-sm);
+    --th-bg: var(--white);
+    --th-fc: var(--black);
+    --th-fs: 0.75rem;
+    --th-fw: var(--font-regular);
+    --th-border: 0;
+    --td-height: 75px;
+    --td-bg: var(--white);
+    --td-fc: var(--black);
+    --td-fs: 0.75rem;
+    --td-fw: var(--font-regular);
+    --td-radius: .75rem;
+    --td-border: 0;
+    --cell-pading: .75rem;
+    --border-spacing: 0 .75rem;
+    --border-collapse: separate;
+    --tr-even-bc: var(--off-white);
+    --tr-odd-bc: var(--off-white);
+    --tr-border: 0;
+
+    width: 100%;
+    min-width: 100%;
+    border-spacing: var(--border-spacing) !important;
+    border-collapse: var(--border-collapse);
+
+    thead tr {
+      height: var(--th-height);
+
+      th {
+        font-size: var(--th-fs);
+        font-weight: var(--th-fw);
+        color: var(--th-fc);
+        background-color: var(--th-bg);
+        padding: var(--cell-pading);
+        line-height: 1;
+        white-space: nowrap;
+        border: var(--th-border);
+      }
+    }
+
+    tbody {
+      tr {
+        height: var(--td-height);
+        background-color: var(--tr-odd-bc);
+        border-bottom: var(--tr-border);
+
+        &:hover{
+          background-color: var(--tr-odd-bc);
+        }
+
+        &:last-child{
+          border-bottom: 0;
+        }
+
+        &:nth-child(even) {
+          background-color: var(--tr-even-bc);
+
+          &:hover{
+            background-color: var(--tr-even-bc);
+          }
+        }
+
+        td {
+          font-size: var(--td-fs);
+          font-weight: var(--td-fw);
+          line-height: 1;
+          padding: var(--cell-pading);
+          border: var(--td-border);
+
+          &:first-child {
+            border-radius: var(--td-radius) 0 0 var(--td-radius);
+
+            [dir="rtl"] & {
+              border-radius: 0 var(--td-radius) var(--td-radius) 0;
+            }
+          }
+
+          &:last-child {
+            border-radius: 0 var(--td-radius) var(--td-radius) 0;
+
+            [dir="rtl"] & {
+              border-radius: var(--td-radius) 0 0 var(--td-radius);
+            }
+          }
+        }
+      }
+    }
+
+  }
+
+
+  .secondary-table {
+    --th-bg: var(--secondary-purple);
+    --td-height: 60px;
+  }
+}
+
+
+
+
+
+

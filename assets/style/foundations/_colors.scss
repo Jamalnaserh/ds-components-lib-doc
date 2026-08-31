@@ -1,0 +1,349 @@
+// Color tokens and semantic aliases.
+// Source of truth: STC eServices Design System — Colors v1.0
+// Last verified against DS spec: 2026-05-11
+@use "sass:color";
+@use "sass:list";
+@use "sass:math";
+
+// ─────────────────────────────────────────────────────────────────────────────
+// LAYER 1 · RAW PALETTE
+// These are the only place hex values are written. Everything else references
+// these variables. Numbers follow the Figma token scale (100 = lightest).
+// All values verified against the DS Colors v1.0 spec sheet.
+// ─────────────────────────────────────────────────────────────────────────────
+
+// Purple — brand primary
+$purple-100: #e9ccff; // 10 %
+$purple-200: #d399ff; // 20 %
+$purple-300: #bd66ff; // 30 %
+$purple-400: #a733ff; // 50 %
+$purple-500: #4f008c; // 100 % — brand
+
+// Coral — brand secondary
+$coral-100: #ffccd6; // 10 %
+$coral-200: #ff99ad; // 20 %
+$coral-300: #ff6685; // 30 %
+$coral-400: #ff335c; // 50 %
+$coral-500: #ff375f; // 100 %
+
+// Moon Light
+$moon-100: #e9d3f8; // 100
+$moon-200: #d3a8f0; // 200
+$moon-300: #bd7ce9; // 300
+$moon-400: #b771e7; // 400
+$moon-500: #a64ee1; // 500
+
+// Orange
+$orange-100: #fff0eb; // 10 %
+$orange-200: #ffc3b0; // 20 %
+$orange-300: #ffb59c; // 30 %
+$orange-400: #ff8c66; // 40 %
+$orange-500: #ff6b39; // 100 %
+
+// Yellow / Warning
+$yellow-100: #fff6cc; // 10 %
+$yellow-200: #ffec99; // 20 %
+$yellow-300: #ffe366; // 30 %
+$yellow-500: #ffdc40; // 100 %
+$yellow-600: #cca700; // 120 % — dark variant
+
+// Sea Light / Info
+$sea-100: #d2f7f9; // 10 %
+$sea-200: #a4f0f4; // 20 %
+$sea-300: #77e8ee; // 30 %
+$sea-400: #4ae0e8; // 40 %
+$sea-500: #1bced8; // 100 %
+
+// Success
+$success-100: #e6f9f4; // 10 %
+$success-200: #b3eddd; // 20 %
+$success-300: #99e7d1; // 30 %
+$success-400: #66dcba; // 40 %
+$success-500: #00c48c; // 100 %
+
+// Error / Danger
+$error-100: #f7d4da; // 10 %
+$error-200: #f0a8b5; // 20 %
+$error-300: #e87d91; // 30 %
+$error-400: #e0526c; // 40 %
+$error-500: #cf2544; // 100 %
+
+// Grey / Neutral — matches DS spec: Off White / Light Grey / Grey / Dark Grey / Black
+// CORRECTED 2026-05-11: all five values were previously off-spec.
+$grey-50:  #fbfbfc; // Off White  (was #f8f8f8)
+$grey-100: #f7f8f9; // Light Grey (was #f3f3f1)
+$grey-200: #e6e9eb; // Grey       (was #c5cacb)
+$grey-400: #89979f; // Dark Grey  (was #8399af)
+$grey-500: #1d252d; // Black
+
+// Absolute
+$white: #fff;
+$black: $grey-500;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// LAYER 2 · SEMANTIC ALIASES
+// One canonical name per concept. Components and Bootstrap vars reference these.
+// shade() / tint() helpers call sass:color so we don't need darken() globally.
+// ─────────────────────────────────────────────────────────────────────────────
+
+// Primary (Purple)
+$primary: $purple-500;
+$primary-light: $purple-400;
+$primary-lighter: $purple-300;
+$primary-lightest: $purple-100;
+$primary-dark: color.adjust($purple-500, $lightness: -8%);
+
+// Secondary (Coral)
+$secondary: $coral-500;
+$secondary-light: $coral-400;
+$secondary-lighter: $coral-300;
+$secondary-lightest: $coral-100;
+$secondary-dark: color.adjust($coral-500, $lightness: -8%);
+
+// Moon Light
+$moon: $moon-500;
+$moon-light: $moon-400;
+$moon-lighter: $moon-300;
+$moon-lightest: $moon-100;
+$moon-dark: color.adjust($moon-500, $lightness: -8%);
+
+// Orange
+$orange: $orange-500;
+$orange-light: $orange-400;
+$orange-lighter: $orange-300;
+$orange-lightest: $orange-100;
+$orange-dark: color.adjust($orange-500, $lightness: -8%);
+
+// Warning (Yellow)
+$warning: $yellow-500;
+$warning-light: $yellow-300;
+$warning-lighter: $yellow-200;
+$warning-lightest: $yellow-100;
+$warning-dark: $yellow-600;
+
+// Info (Sea Light)
+$info: $sea-500;
+$info-light: $sea-400;
+$info-lighter: $sea-300;
+$info-lightest: $sea-100;
+$info-dark: color.adjust($sea-500, $lightness: -8%);
+
+// Success
+$success: $success-500;
+$success-light: $success-400;
+$success-lighter: $success-300;
+$success-lightest: $success-100;
+$success-dark: color.adjust($success-500, $lightness: -8%);
+
+// Danger / Error
+$danger: $error-500;
+$error: $error-500; // alias so component code can use either name
+$danger-light: $error-400;
+$danger-lighter: $error-300;
+$danger-lightest: $error-100;
+$danger-dark: color.adjust($error-500, $lightness: -8%);
+
+// Neutrals
+$off-white: $grey-50;
+$light-grey: $grey-100;
+$grey: $grey-200;
+$dark-grey: $grey-400;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// LAYER 3 · BOOTSTRAP $theme-colors OVERRIDE
+// Declared once here. Consumed by _bootstrap-overrides.scss which loads this
+// file via @use. Bootstrap generates all utility classes from this map.
+// ─────────────────────────────────────────────────────────────────────────────
+
+// NOTE: This map must be defined BEFORE Bootstrap partials are @imported.
+//       _bootstrap-overrides.scss @uses this file, so the load order is:
+//       _colors → _bootstrap-overrides → bootstrap/scss/functions → …
+$theme-colors: (
+  // Bootstrap semantic roles
+  "primary": $primary,
+  "secondary": $secondary,
+  "success": $success,
+  "danger": $danger,
+  "warning": $warning,
+  "info": $info,
+  "light": $light-grey,
+  "dark": $black,
+
+  // Extended DS palette — unlocks .bg-{key}, .text-{key}, .btn-{key}, etc.
+  "purple": $purple-500,
+  "coral": $coral-500,
+  "moon": $moon-500,
+  "orange": $orange-500,
+  "yellow": $yellow-500,
+  "sea": $sea-500
+) !default;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// COLOR MAP FOR CSS CUSTOM PROPERTY GENERATION
+// Used by the generate-color-tokens() mixin in global.scss.
+// Only contains the tokens that actually need a --{name} CSS variable.
+// ─────────────────────────────────────────────────────────────────────────────
+$color-tokens: (
+  // Palette scales
+  "purple-100": $purple-100,
+  "purple-200": $purple-200,
+  "purple-300": $purple-300,
+  "purple-400": $purple-400,
+  "purple-500": $purple-500,
+
+  "coral-100": $coral-100,
+  "coral-200": $coral-200,
+  "coral-300": $coral-300,
+  "coral-400": $coral-400,
+  "coral-500": $coral-500,
+
+  "moon-100": $moon-100,
+  "moon-200": $moon-200,
+  "moon-300": $moon-300,
+  "moon-400": $moon-400,
+  "moon-500": $moon-500,
+
+  "orange-100": $orange-100,
+  "orange-200": $orange-200,
+  "orange-300": $orange-300,
+  "orange-400": $orange-400,
+  "orange-500": $orange-500,
+
+  "yellow-100": $yellow-100,
+  "yellow-200": $yellow-200,
+  "yellow-300": $yellow-300,
+  "yellow-500": $yellow-500,
+  "yellow-600": $yellow-600,
+
+  "sea-100": $sea-100,
+  "sea-200": $sea-200,
+  "sea-300": $sea-300,
+  "sea-400": $sea-400,
+  "sea-500": $sea-500,
+
+  "success-100": $success-100,
+  "success-200": $success-200,
+  "success-300": $success-300,
+  "success-400": $success-400,
+  "success-500": $success-500,
+
+  "error-100": $error-100,
+  "error-200": $error-200,
+  "error-300": $error-300,
+  "error-400": $error-400,
+  "error-500": $error-500,
+
+  // Greys — DS spec only defines 50/100/200/400/500 (no grey-300).
+  // Do NOT add grey-300 here. Components that need a mid-tone use grey-200 or grey-400.
+  "grey-50":  $grey-50,
+  "grey-100": $grey-100,
+  "grey-200": $grey-200,
+  "grey-400": $grey-400,
+  "grey-500": $grey-500,
+
+  // Semantic shortcuts as CSS vars (components can use var(--primary) etc.)
+  "primary":   $primary,
+  "secondary": $secondary,
+  "success":   $success,
+  "danger":    $danger,
+  "warning":   $warning,
+  "info":      $info,
+  "white":     $white,
+  "black":     $black,
+  "off-white": $off-white,
+  "light-grey": $light-grey,
+  "grey":      $grey,
+  "dark-grey": $dark-grey
+);
+
+// ─────────────────────────────────────────────────────────────────────────────
+// LAYER 4 · RGB CHANNEL MAP
+// Some components need rgba() with a runtime-set alpha (e.g. focus-ring
+// shadows: `rgba(var(--rgb-primary), 0.25)`). CSS var() does NOT work inside
+// modern color functions like rgb()/hsl() in all supported browsers — the
+// classic, universally-supported trick is to emit a companion `--rgb-<name>`
+// custom property holding the comma-separated channels: `79, 0, 140`.
+//
+// Generated alongside $color-tokens by generate-color-tokens() in global.scss.
+// Usage in components:
+//   box-shadow: 0 0 0 3px rgba(var(--rgb-primary), 0.25);
+// ─────────────────────────────────────────────────────────────────────────────
+
+/// Convert a Sass color into a "R, G, B" channel string suitable for use
+/// inside a CSS rgba() declaration via custom property.
+@function to-rgb-channels($color) {
+  @return "#{color.channel($color, 'red',   $space: rgb)}, " +
+          "#{color.channel($color, 'green', $space: rgb)}, " +
+          "#{color.channel($color, 'blue',  $space: rgb)}";
+}
+
+$rgb-tokens: (
+  // Palette scales
+  "purple-100": to-rgb-channels($purple-100),
+  "purple-200": to-rgb-channels($purple-200),
+  "purple-300": to-rgb-channels($purple-300),
+  "purple-400": to-rgb-channels($purple-400),
+  "purple-500": to-rgb-channels($purple-500),
+
+  "coral-100": to-rgb-channels($coral-100),
+  "coral-200": to-rgb-channels($coral-200),
+  "coral-300": to-rgb-channels($coral-300),
+  "coral-400": to-rgb-channels($coral-400),
+  "coral-500": to-rgb-channels($coral-500),
+
+  "moon-100": to-rgb-channels($moon-100),
+  "moon-200": to-rgb-channels($moon-200),
+  "moon-300": to-rgb-channels($moon-300),
+  "moon-400": to-rgb-channels($moon-400),
+  "moon-500": to-rgb-channels($moon-500),
+
+  "orange-100": to-rgb-channels($orange-100),
+  "orange-200": to-rgb-channels($orange-200),
+  "orange-300": to-rgb-channels($orange-300),
+  "orange-400": to-rgb-channels($orange-400),
+  "orange-500": to-rgb-channels($orange-500),
+
+  "yellow-100": to-rgb-channels($yellow-100),
+  "yellow-200": to-rgb-channels($yellow-200),
+  "yellow-300": to-rgb-channels($yellow-300),
+  "yellow-500": to-rgb-channels($yellow-500),
+  "yellow-600": to-rgb-channels($yellow-600),
+
+  "sea-100": to-rgb-channels($sea-100),
+  "sea-200": to-rgb-channels($sea-200),
+  "sea-300": to-rgb-channels($sea-300),
+  "sea-400": to-rgb-channels($sea-400),
+  "sea-500": to-rgb-channels($sea-500),
+
+  "success-100": to-rgb-channels($success-100),
+  "success-200": to-rgb-channels($success-200),
+  "success-300": to-rgb-channels($success-300),
+  "success-400": to-rgb-channels($success-400),
+  "success-500": to-rgb-channels($success-500),
+
+  "error-100": to-rgb-channels($error-100),
+  "error-200": to-rgb-channels($error-200),
+  "error-300": to-rgb-channels($error-300),
+  "error-400": to-rgb-channels($error-400),
+  "error-500": to-rgb-channels($error-500),
+
+  "grey-50":  to-rgb-channels($grey-50),
+  "grey-100": to-rgb-channels($grey-100),
+  "grey-200": to-rgb-channels($grey-200),
+  "grey-400": to-rgb-channels($grey-400),
+  "grey-500": to-rgb-channels($grey-500),
+
+  // Semantic shortcuts
+  "primary":   to-rgb-channels($primary),
+  "secondary": to-rgb-channels($secondary),
+  "success":   to-rgb-channels($success),
+  "danger":    to-rgb-channels($danger),
+  "warning":   to-rgb-channels($warning),
+  "info":      to-rgb-channels($info),
+  "white":     to-rgb-channels($white),
+  "black":     to-rgb-channels($black),
+  "off-white": to-rgb-channels($off-white),
+  "light-grey": to-rgb-channels($light-grey),
+  "grey":      to-rgb-channels($grey),
+  "dark-grey": to-rgb-channels($dark-grey)
+);

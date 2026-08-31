@@ -1,0 +1,9 @@
+<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+<path d="M22 2.00002L2 22" stroke="currentColor" stroke-miterlimit="10" fill="none"/>
+<path d="M22 8L22 2L16 2" stroke="currentColor" stroke-miterlimit="10" fill="none"/>
+<path d="M22 22L2 2" stroke="currentColor" stroke-miterlimit="10" fill="none"/>
+<path d="M16 22L22 22L22 16" stroke="currentColor" stroke-miterlimit="10" fill="none"/>
+<path d="M8 2L2 2L2 8" stroke="currentColor" stroke-miterlimit="10" fill="none"/>
+<path d="M2 16L2 22L8 22" stroke="currentColor" stroke-miterlimit="10" fill="none"/>
+<path d="M22 16L22 22L16 22" stroke="currentColor" stroke-miterlimit="10" fill="none"/>
+</svg>

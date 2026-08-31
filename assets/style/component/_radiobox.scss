@@ -1,0 +1,64 @@
+.mat-mdc-radio-group{
+  grid-gap: 1rem;
+  display: flex;
+}
+
+
+.mat-mdc-radio-button.mat-accent{
+  --radio-border-width: 2px;
+  --radio-border: var(--gray);
+  --radio-border-active: var(--coral);
+  --radio-bg: var(--white);
+  --radio-bg-active: var(--coral);
+  --radio-size: 24px;
+  --radio-radius: 50%;
+  --mdc-radio-disabled-selected-icon-color: var(--black);
+  --mdc-radio-disabled-unselected-icon-color: var(--black);
+  --mdc-radio-unselected-focus-icon-color: var(--dark-gray);
+  --mdc-radio-unselected-hover-icon-color: var(--dark-gray);
+  --mdc-radio-unselected-icon-color: var(--radio-border);
+  --mdc-radio-unselected-pressed-icon-color: var(--radio-border);
+  --mdc-radio-selected-focus-icon-color: var(--radio-border-active);
+  --mdc-radio-selected-hover-icon-color: var(--radio-border-active);
+  --mdc-radio-selected-icon-color: var(--radio-border-active);
+  --mdc-radio-selected-pressed-icon-color: var(--radio-border-active);
+  --mat-mdc-radio-ripple-color: var(--black);
+  --mat-mdc-radio-checked-ripple-color: var(--radio-border-active);
+  --mdc-radio-state-layer-size: 20px;
+
+  .mdc-form-field{
+    gap: .5rem;
+
+    >label{
+      font: inherit;
+      padding: 0;
+    }
+  }
+
+  .mat-mdc-radio-touch-target{
+    height: var(--mdc-radio-state-layer-size);
+    width: var(--mdc-radio-state-layer-size);
+  }
+
+  .mdc-radio{
+    transform: scale(1.2);
+  }
+
+  // .mdc-radio{
+  //  width: var(--mdc-radio-state-layer-size);
+  //  min-width: var(--mdc-radio-state-layer-size);
+  //  height: var(--mdc-radio-state-layer-size);
+  //  padding: 0;
+  //
+  //  &__background{
+  //    width: var(--mdc-radio-state-layer-size) !important;
+  //    min-width: var(--mdc-radio-state-layer-size) !important;
+  //    height: var(--mdc-radio-state-layer-size) !important;
+  //  }
+  //
+  //  &__inner-circle {
+  //    background: var(--mdc-radio-selected-icon-color);
+  //  }
+  // }
+
+}

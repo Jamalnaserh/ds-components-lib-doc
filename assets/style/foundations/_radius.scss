@@ -1,0 +1,33 @@
+// Border radius scale.
+// ─────────────────────────────────────────────────────────────────────────────
+// DS RADIUS SCALE (matches Figma spec exactly)
+// ─────────────────────────────────────────────────────────────────────────────
+$radius: (
+  "none": 0,
+  "xs": 0.125rem,
+  //  2 px — Extra Small
+  "sm": 0.25rem,
+  //  4 px — Small
+  "md": 0.5rem,
+  //  8 px — Medium
+  "lg": 0.75rem,
+  // 12 px — Large
+  "xl": 1rem,
+  // 16 px — XL
+  "xxl": 1.5rem,
+  // 24 px — XXL
+  "full": 9999px, // pill / fully round
+) !default;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// BOOTSTRAP BORDER-RADIUS OVERRIDES
+// Bootstrap reads these specific variables; setting them here ensures all
+// BS components (.card, .btn, .modal …) use DS radii automatically.
+// ─────────────────────────────────────────────────────────────────────────────
+$border-radius: 0.25rem !default; // sm  — default component radius
+$border-radius-sm: 0.25rem !default; // sm  — .rounded-sm
+$border-radius-md: 0.5rem !default; // md  — matches $radius 'md'
+$border-radius-lg: 0.75rem !default; // lg  — .rounded-lg
+$border-radius-xl: 1rem !default; // xl  — .rounded-xl
+$border-radius-xxl: 1.5rem !default; // xxl — .rounded-xxl
+$border-radius-pill: 9999px !default; // full — .rounded-pill

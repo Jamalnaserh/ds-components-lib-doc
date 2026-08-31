@@ -1,0 +1,135 @@
+.primary-accordion, .mat-accordion{
+  --accordion-height: 3.4375rem;
+  --accordion-bc: var(--white);
+  --accordion-bc-active: var(--white);
+  --accordion-side-border-color: transparent;
+  --accordion-side-border-color-active: transparent;
+  --accordion-side-border-width: 1px;
+  --accordion-radius: 6px;
+  --accordion-title-fs: 1.125rem;
+  --accordion-title-fw: var(--font-medium);
+  --accordion-title-fc: var(--black);
+  --accordion-border: 1px solid transparent;
+  --accordion-border-active: 1px solid var(--dark-gray);
+  --accordion-shadow: var(--box-shadow);
+  --accordion-shadow-active: none;
+  --panel-padding: 0 1rem;
+  --panel-body-border: 0;
+  --panel-body-radius: 0 0 4px 4px;
+  --panel-body-padding: 1.5rem;
+  --indicator-color: var(--black);
+  --indicator-color-active: var(--black);
+  --indicator-bc: var(--light-gray);
+  --indicator-bc-active: var(--light-gray);
+  --indicator-size: 30px;
+  --indicator-radius: 50%;
+  --indicator-icon: "\ea2c";
+  --indicator-icon-size: 1rem;
+  --indicator-icon-active: "\ea2c";
+
+
+
+
+
+  .mat-expansion-panel{
+    border-radius: var(--accordion-radius) !important;
+    box-shadow: var(--accordion-shadow) !important;
+    border: var(--accordion-border);
+    background-color: transparent;
+    transition: var(--default-transition);
+
+    &.mat-expanded{
+      --accordion-side-border-color: var(--accordion-side-border-color-active);
+      --accordion-border: var(--accordion-border-active);
+      --accordion-shadow: var(--accordion-shadow-active);
+      --accordion-bc: var(--accordion-bc-active);
+      --indicator-bc: var(--indicator-bc-active);
+      --indicator-color: var(--indicator-color-active);
+      --indicator-icon: var(--indicator-icon-active);
+    }
+
+    .mat-expansion-panel-header{
+      height: var(--accordion-height) !important;
+      background-color: var(--accordion-bc) !important;
+      border-radius: var(--accordion-radius);
+      padding: var(--panel-padding);
+      border-width: 0;
+      border-left-width: var(--accordion-side-border-width);
+      border-style: solid;
+      border-color: var(--accordion-side-border-color);
+      transition: var(--defult-transition);
+
+      [dir="rtl"] & {
+        border-left-width: 0;
+        border-right-width: var(--accordion-side-border-width);
+      }
+
+      .mat-content{
+        align-items: center;
+      }
+
+      .panel-title{
+        min-width: 40%;
+        width: 40%;
+      }
+
+      .panel-user-status{
+        min-width: 60%;
+        width: 60%;
+        padding: 0 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .user-delegate{
+          min-width: 80px;
+        }
+
+        .panel-user{
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+        }
+      }
+
+      .panel-title{
+        color: var(--black);
+      }
+
+      .panel-user-name{
+        color: var(--black);
+      }
+
+      .mat-expansion-indicator{
+        background-color: var(--indicator-bc);
+        width: var(--indicator-size);
+        height: var(--indicator-size);
+        border-radius: var(--indicator-radius);
+        align-items: center;
+        justify-content: center;
+        display: flex;
+
+        &::after {
+          transform: none !important;
+          padding: 4px;
+          border: none !important;
+          margin: 0;
+          content: var(--indicator-icon);
+          font-family: var(--font-icon);
+          font-size: var(--indicator-icon-size);
+          color: var(--indicator-color);
+        }
+      }
+
+    }
+
+    .mat-expansion-panel-body{
+      padding: var(--panel-body-padding) !important;
+      border: var(--panel-body-border) !important;
+      border-radius: var(--panel-body-radius);
+      overflow: hidden;
+    }
+  }
+}
+
+

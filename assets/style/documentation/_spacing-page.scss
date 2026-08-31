@@ -1,0 +1,98 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// documentation/_spacing-page.scss
+// Styles exclusive to the Spacing foundations page.
+// ─────────────────────────────────────────────────────────────────────────────
+
+// ── Table structure ────────────────────────────────────────────────────────
+.spacing-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--doc-surface);
+  border: 1px solid var(--doc-border);
+  border-radius: var(--radius-xl, 16px);
+  overflow: hidden;
+
+  thead th {
+    font-size: var(--font-size-text-xs, 0.6875rem);
+    font-weight: var(--font-weight-medium, 500);
+    color: var(--doc-text-secondary);
+    padding: 0.875rem 1rem;
+    border-bottom: 1px solid var(--doc-border-strong);
+    text-align: start;
+    background: var(--doc-surface-header);
+
+    &:nth-child(1),
+    &:nth-child(2) {
+      width: 9rem;
+    }
+
+    &:nth-child(3) {
+      width: 6rem;
+    }
+  }
+
+  tbody {
+    tr {
+      border-bottom: 1px solid var(--doc-border);
+
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+
+    td {
+      padding: 0.875rem 1rem;
+      font-size: var(--font-size-text-sm, 0.875rem);
+      color: var(--doc-text);
+      vertical-align: middle;
+    }
+  }
+}
+
+// ── Column styles ──────────────────────────────────────────────────────────
+.col-name {
+  font-weight: var(--font-weight-medium, 500);
+}
+
+.col-size,
+.col-px {
+  color: var(--doc-text-secondary);
+}
+
+.spacing-table__section {
+  padding: 0.625rem 1rem;
+  font-size: var(--font-size-text-xs, 0.6875rem);
+  font-weight: var(--font-weight-semibold, 600);
+  color: var(--doc-text-secondary);
+  background: var(--doc-surface-header, rgb(0 0 0 / 4%));
+  border-bottom: 1px solid var(--doc-border);
+}
+
+// ── Visual bar (supports both old markup + new JS markup) ───────────────────
+.bar-wrap,
+.spacing-preview {
+  padding-inline-end: var(--spacing-16, 1rem);
+}
+
+.bar-box,
+.spacing-preview__bar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0 var(--spacing-4, 0.25rem);
+  height: var(--spacing-24, 1.5rem);
+  min-width: var(--spacing-24, 1.5rem);
+  background-color: rgb(255 55 95 / 16%);
+  border: 1px solid rgb(255 55 95 / 28%);
+  border-radius: var(--radius-sm, 4px);
+  white-space: nowrap;
+  font-size: var(--font-size-text-xxs, 0.75rem);
+  font-weight: var(--font-weight-medium, 500);
+  color: var(--doc-text);
+}
+
+.bar-label {
+  font-size: var(--font-size-text-xxs, 0.75rem);
+  font-weight: var(--font-weight-medium, 500);
+  color: var(--doc-text);
+}

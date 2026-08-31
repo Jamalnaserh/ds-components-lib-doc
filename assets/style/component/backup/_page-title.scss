@@ -1,0 +1,20 @@
+.page-title {
+  display: flex;
+  justify-content: space-between;
+
+  h1 {
+    font-size: 1.6875rem;
+    font-weight: var(--font-medium);
+    color: var(--black);
+    @media (width <= 768px) {
+      font-size: 1.2rem;
+    }
+  }
+
+  .page-title-actions {
+    .btn {
+      min-width: 117px;
+      height: 35px;
+    }
+  }
+}

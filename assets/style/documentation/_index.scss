@@ -1,0 +1,999 @@
+@use "sass:map";
+@use "sass:color";
+
+@use "colors-page";
+@use "typography-page";
+@use "icons-page";
+@use "spacing-page";
+@use "shadows-page";
+@use "radius-page";
+@use "grid-page";
+@use "dashboard-page";
+@use "components-page";
+@use "component-page";
+
+@use "../foundations/colors" as c;
+@use "../foundations/spacing" as s;
+@use "../foundations/typography" as t;
+@use "../foundations/shadows" as sh;
+@use "../foundations/radius" as r;
+@use "../abstracts/mixins" as mx;
+
+:root {
+  --doc-sidebar-width: #{mx.px-to-rem(240)};
+  --doc-sidebar-width-sm: #{map.get(s.$spacing-scale, "48") + map.get(s.$spacing-scale, "8")};
+  --doc-header-height: #{map.get(s.$spacing-scale, "48") + map.get(s.$spacing-scale, "8")};
+  --doc-content-max-width: #{mx.px-to-rem(1152)};
+  --doc-content-narrow: #{mx.px-to-rem(768)};
+  --doc-surface: #{c.$white};
+  --doc-surface-sidebar: #{c.$white};
+  --doc-surface-header: #{c.$white};
+  --doc-border: #{c.$light-grey};
+  --doc-border-strong: #{c.$grey};
+  --doc-text: #{c.$black};
+  --doc-text-secondary: #{c.$dark-grey};
+  --doc-accent: #{c.$primary};
+  --doc-accent-surface: #{c.$purple-100};
+  --doc-focus-ring: #{c.$primary};
+  --doc-nav-active-bg: #{c.$purple-100};
+  --doc-nav-active-color: #{c.$primary};
+  --doc-nav-hover-bg: #{c.$off-white};
+  --doc-sidebar-transition: transform 0.25s ease, width 0.25s ease;
+}
+
+// =============================================================================
+// § 2  RESET / BASE ADJUSTMENTS FOR DOC PAGES
+// =============================================================================
+.ds-app,
+.ds-app * {
+  box-sizing: border-box;
+}
+
+// Screen-reader only utility (used in breadcrumb, skip link)
+.ds-sr-only {
+  @include mx.visually-hidden;
+}
+
+// Skip-to-main link
+.ds-skip-link {
+  position: absolute;
+  top: -3rem;
+  inset-inline-start: 1rem;
+  padding: 0.5rem 1rem;
+  background: var(--doc-accent);
+  color: #fff;
+  border-radius: var(--radius-sm, 4px);
+  font-size: 0.875rem;
+  font-weight: 600;
+  z-index: 9999;
+  transition: top 0.15s;
+
+  &:focus {
+    top: 0.5rem;
+  }
+}
+
+// =============================================================================
+// § 3  DOC-SHELL LAYOUT
+// =============================================================================
+
+// ── App wrapper ───────────────────────────────────────────────────────────────
+.ds-app {
+  display: flex;
+  min-height: 100dvh;
+  background: var(--grey-50, #f8f8f8);
+  font-family: var(--font-family-base);
+  color: var(--doc-text);
+}
+
+// ── Sidebar overlay (mobile) ──────────────────────────────────────────────────
+.ds-sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgb(0 0 0 / 40%);
+  z-index: 99;
+  cursor: pointer;
+
+  @media (width <= 767px) {
+    &.is-open {
+      display: block;
+    }
+  }
+}
+
+// ── Sidebar ───────────────────────────────────────────────────────────────────
+.ds-sidebar {
+  position: fixed;
+  inset-block: 0;
+  inset-inline-start: 0;
+  width: var(--doc-sidebar-width);
+  background: var(--doc-surface-sidebar);
+  border-inline-end: 1px solid var(--doc-border);
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+  overflow: hidden;
+  transition: var(--doc-sidebar-transition);
+
+  @media (width <= 767px) {
+    transform: translateX(-100%);
+
+    [dir="rtl"] & {
+      transform: translateX(100%);
+    }
+
+    &.is-open {
+      transform: translateX(0);
+      box-shadow: var(--shadow-xl, 0 20px 24px rgb(0 0 0 / 8%));
+    }
+  }
+}
+
+// Logo / home link (brand via <ds-logo>)
+.ds-sidebar__logo {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.75rem 0.875rem;
+  border-block-end: 1px solid var(--doc-border);
+  text-decoration: none;
+  flex-shrink: 0;
+  color: var(--doc-text);
+
+  &:focus-visible {
+    @include mx.focus-ring(var(--doc-focus-ring));
+  }
+
+  &.is-active,
+  &[aria-current="page"] {
+    background: var(--doc-nav-active-bg);
+    color: var(--doc-nav-active-color);
+  }
+}
+
+.ds-sidebar__logo-brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  line-height: 0;
+
+  ds-logo {
+    display: block;
+  }
+}
+
+.ds-sidebar__logo-divider {
+  width: 1px;
+  height: 1.5rem;
+  background: var(--doc-border-strong);
+  flex-shrink: 0;
+}
+
+.ds-sidebar__logo-label {
+  font-size: 0.6875rem;
+  font-weight: var(--font-weight-medium, 500);
+  color: var(--doc-text-secondary);
+  line-height: 1.3;
+  white-space: nowrap;
+}
+
+// Nav scroll area
+.ds-sidebar__nav {
+  flex: 1;
+  overflow: hidden auto;
+  padding: 1rem 0.75rem;
+  scrollbar-width: thin;
+  scrollbar-color: var(--doc-border-strong) transparent;
+
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--doc-border-strong);
+    border-radius: 4px;
+  }
+}
+
+// Nav group (section + items)
+.ds-nav-group {
+  margin-block-end: 0.5rem;
+}
+
+// Section title (decorative — aria-hidden)
+.ds-nav-section-title {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.625rem;
+  font-weight: var(--font-weight-semibold, 600);
+  color: var(--doc-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 0.5rem 0.5rem 0.375rem;
+  margin-block-end: 0.125rem;
+}
+
+.ds-diamond {
+  display: inline-block;
+  width: 0.3125rem;
+  height: 0.3125rem;
+  background: var(--doc-accent);
+  transform: rotate(45deg);
+  flex-shrink: 0;
+  border-radius: 1px;
+}
+
+// Nav item
+.ds-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  justify-content: flex-start;
+  padding: 0.4375rem 0.625rem;
+  border-radius: var(--radius-md, 8px);
+  font-size: 0.8125rem;
+  font-weight: var(--font-weight-regular, 400);
+  color: var(--doc-text);
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background 0.12s,
+    color 0.12s;
+  line-height: 1.4;
+
+  &:hover {
+    background: var(--doc-nav-hover-bg);
+    color: var(--doc-text);
+    text-decoration: none;
+  }
+
+  &--active,
+  &.is-active,
+  &[aria-current="page"] {
+    background: var(--doc-nav-active-bg);
+    color: var(--doc-nav-active-color);
+    font-weight: var(--font-weight-medium, 500);
+  }
+
+  &:focus-visible {
+    @include mx.focus-ring(var(--doc-focus-ring));
+
+    outline-offset: -2px;
+  }
+}
+
+.ds-nav-item__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 1.5rem;
+  height: 1.5rem;
+  line-height: 0;
+
+  ds-icon {
+    display: block;
+    flex-shrink: 0;
+  }
+}
+
+.ds-nav-item__label {
+  flex: 1;
+  min-width: 0;
+}
+
+// ── Doc toolbar (sidebar toggle on small screens + optional breadcrumb) ────
+.ds-doc-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  padding: 0.625rem 1.25rem;
+  border-block-end: 1px solid var(--doc-border);
+  background: var(--doc-surface);
+  position: sticky;
+  top: 0;
+  z-index: 40;
+
+  .ds-breadcrumb {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .ds-sidebar-toggle {
+    @media (width >= 768px) {
+      display: none;
+    }
+  }
+}
+
+// ── Component API tables (doc-props mixin) ─────────────────────────────────
+.ds-doc-props {
+  margin-block-end: 1.5rem;
+
+  &__title {
+    font-size: 1rem;
+    font-weight: var(--font-weight-semibold, 600);
+    color: var(--doc-text);
+    margin: 0 0 0.75rem;
+  }
+
+  &__wrap {
+    border: 1px solid var(--doc-border);
+    border-radius: var(--radius-lg, 12px);
+    overflow: hidden;
+    background: var(--doc-surface);
+  }
+
+  &--note .ds-doc-props__title {
+    margin-block-end: 0.5rem;
+  }
+
+  &__lead {
+    max-width: 48rem;
+  }
+}
+
+// ── Button demo: paginated comprehensive matrix ────────────────────────────
+.ds-doc-pager {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  margin-block-end: 1rem;
+  border: 1px solid var(--doc-border);
+  border-radius: var(--radius-xl, 16px);
+  background: var(--doc-surface);
+
+  &__meta {
+    font-size: 0.8125rem;
+    color: var(--doc-text-secondary);
+    flex: 1;
+    min-width: 12rem;
+  }
+
+  &__controls {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+}
+
+.js-btn-matrix-page {
+  display: none;
+
+  &.is-active {
+    display: block;
+  }
+}
+
+// "New" badge on nav items
+.ds-nav-badge {
+  display: inline-block;
+  font-size: 0.5rem;
+  font-weight: var(--font-weight-bold, 700);
+  color: var(--doc-accent);
+  background: var(--doc-accent-surface);
+  border: 1px solid var(--purple-200, #d399ff);
+  padding: 0.0625rem 0.3125rem;
+  border-radius: var(--radius-full, 9999px);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  line-height: 1.5;
+}
+
+// Divider between nav groups
+.ds-nav-divider {
+  height: 1px;
+  background: var(--doc-border);
+  margin: 0.5rem 0;
+}
+
+// ── Main area ─────────────────────────────────────────────────────────────────
+.ds-main {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  flex: 1;
+  margin-inline-start: var(--doc-sidebar-width);
+  transition: margin-inline-start 0.25s ease;
+  min-width: 0; // prevent flex blowout
+
+  @media (width <= 767px) {
+    margin-inline-start: 0;
+  }
+}
+
+// ── Header ────────────────────────────────────────────────────────────────────
+.ds-header {
+  position: sticky;
+  top: 0;
+  height: var(--doc-header-height);
+  background: var(--doc-surface-header);
+  border-block-end: 1px solid var(--doc-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.5rem;
+  z-index: 50;
+  gap: 1rem;
+}
+
+.ds-header__left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+  flex: 1;
+}
+
+.ds-header__right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+
+.ds-header__page-title {
+  font-size: 0.8125rem;
+  font-weight: var(--font-weight-medium, 500);
+  color: var(--doc-text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// Header search input
+.ds-header__search {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  position: relative;
+}
+
+.ds-header__search-input {
+  height: 2rem;
+  padding: 0 0.75rem 0 2rem;
+  border: 1px solid var(--doc-border-strong);
+  border-radius: var(--radius-full, 9999px);
+  font-family: var(--font-family-base);
+  font-size: 0.8125rem;
+  color: var(--doc-text);
+  background: var(--grey-50, #f8f8f8);
+  width: 14rem;
+  transition:
+    border-color 0.15s,
+    width 0.2s ease,
+    box-shadow 0.15s;
+
+  &::placeholder {
+    color: var(--doc-text-secondary);
+  }
+
+  &:focus {
+    outline: none;
+    border-color: var(--doc-accent);
+    box-shadow: 0 0 0 3px rgb(79 0 140 / 15%);
+    background: var(--doc-surface);
+    width: 18rem;
+  }
+
+  // Clear button (native search input)
+  &::-webkit-search-cancel-button {
+    cursor: pointer;
+  }
+}
+
+.ds-header__search-icon {
+  position: absolute;
+  inset-inline-start: 0.625rem;
+  color: var(--doc-text-secondary);
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+
+  svg {
+    width: 0.875rem;
+    height: 0.875rem;
+    fill: currentcolor;
+  }
+}
+
+// Brand slot (empty div when headerMode = 'slot')
+.ds-header__brand-slot {
+  width: 10rem;
+  height: 1.5rem;
+}
+
+// ── Sidebar toggle button ─────────────────────────────────────────────────────
+.ds-sidebar-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border: none;
+  background: transparent;
+  border-radius: var(--radius-md, 8px);
+  cursor: pointer;
+  color: var(--doc-text);
+  flex-shrink: 0;
+  transition: background 0.12s;
+
+  &:hover {
+    background: var(--doc-nav-hover-bg);
+  }
+
+  &:focus-visible {
+    @include mx.focus-ring(var(--doc-focus-ring));
+  }
+}
+
+.ds-sidebar-toggle__icon {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  width: 1rem;
+
+  span {
+    display: block;
+    height: 1.5px;
+    background: currentcolor;
+    border-radius: 1px;
+    transition:
+      transform 0.2s,
+      opacity 0.2s,
+      width 0.2s;
+
+    &:nth-child(1) {
+      width: 100%;
+    }
+
+    &:nth-child(2) {
+      width: 75%;
+    }
+
+    &:nth-child(3) {
+      width: 100%;
+    }
+  }
+}
+
+// Animated state when sidebar is open
+[aria-expanded="true"] .ds-sidebar-toggle__icon {
+  span:nth-child(1) {
+    transform: translateY(5.5px) rotate(45deg);
+    width: 100%;
+  }
+
+  span:nth-child(2) {
+    opacity: 0;
+    transform: scaleX(0);
+  }
+
+  span:nth-child(3) {
+    transform: translateY(-5.5px) rotate(-45deg);
+    width: 100%;
+  }
+}
+
+// ── Brand lock-up (header right) ──────────────────────────────────────────────
+.ds-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.ds-brand__stc {
+  font-size: 1rem;
+  font-weight: var(--font-weight-bold, 700);
+  color: var(--doc-accent);
+  font-style: italic;
+  line-height: 1;
+}
+
+.ds-brand__divider {
+  width: 1px;
+  height: 1.125rem;
+  background: var(--doc-border-strong);
+}
+
+.ds-brand__label {
+  font-size: 0.6875rem;
+  font-weight: var(--font-weight-medium, 500);
+  color: var(--doc-text-secondary);
+  white-space: nowrap;
+}
+
+.ds-brand__version {
+  font-size: 0.5625rem;
+  font-weight: var(--font-weight-semibold, 600);
+  color: var(--doc-accent);
+  background: var(--doc-accent-surface);
+  border: 1px solid var(--purple-200, #d399ff);
+  padding: 0.0625rem 0.3125rem;
+  border-radius: var(--radius-full, 9999px);
+  line-height: 1.5;
+}
+
+// ── Breadcrumb ────────────────────────────────────────────────────────────────
+.ds-breadcrumb {
+  // Wrapper nav element
+}
+
+.ds-breadcrumb__list {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: 0.75rem;
+  color: var(--doc-text-secondary);
+}
+
+.ds-breadcrumb__item {
+  display: flex;
+  align-items: center;
+}
+
+.ds-breadcrumb__link {
+  color: var(--doc-text-secondary);
+  text-decoration: none;
+  transition: color 0.12s;
+  white-space: nowrap;
+
+  &:hover {
+    color: var(--doc-accent);
+  }
+
+  &:focus-visible {
+    @include mx.focus-ring(var(--doc-focus-ring));
+
+    border-radius: 2px;
+  }
+}
+
+.ds-breadcrumb__sep {
+  margin-inline: 0.3125rem;
+  color: var(--doc-border-strong);
+  user-select: none;
+}
+
+.ds-breadcrumb__current {
+  color: var(--doc-text);
+  font-weight: var(--font-weight-medium, 500);
+  white-space: nowrap;
+}
+
+// ── Content area ─────────────────────────────────────────────────────────────
+.ds-content {
+  flex: 1;
+  padding: 0;
+  overflow: auto;
+  outline: none; // receives tabindex="-1" for skip link
+
+  &:focus-visible {
+    box-shadow: inset 0 0 0 2px var(--doc-focus-ring);
+  }
+}
+
+// Page header (title bar above content body)
+.ds-page-header {
+  padding: 1.5rem 2.5rem 1.25rem;
+  border-block-end: 1px solid var(--doc-border);
+  background: var(--doc-surface);
+}
+
+.ds-page-title {
+  font-size: 1.5rem;
+  font-weight: var(--font-weight-bold, 700);
+  color: var(--doc-text);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin: 0;
+}
+
+// Section heading inside a page body
+.ds-section-title {
+  font-size: 1rem;
+  font-weight: var(--font-weight-semibold, 600);
+  color: var(--doc-text);
+  margin-block: 1.5rem 0.875rem;
+
+  &:first-child {
+    margin-block-start: 0;
+  }
+}
+
+// Page body wrapper — two width variants
+.ds-page-body {
+  padding: 2rem 2.5rem 4rem;
+
+  &--narrow {
+    max-width: 100%;
+  }
+}
+
+// Inline code / token pill used across pages
+.ds-code {
+  font-family: var(--font-family-mono);
+  font-size: 0.75rem;
+  background: var(--grey-100, #f3f3f1);
+  color: var(--doc-accent);
+  padding: 0.125rem 0.375rem;
+  border-radius: var(--radius-sm, 4px);
+  word-break: break-all;
+}
+
+// =============================================================================
+// § 4  HOME PAGE
+// =============================================================================
+.ds-home {
+  position: relative;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 3rem 2rem;
+}
+
+// Decorative blobs (aria-hidden)
+@mixin decorative-blob($size, $color, $opacity: 0.35) {
+  position: absolute;
+  width: $size;
+  height: $size;
+  background: $color;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: $opacity;
+  pointer-events: none;
+}
+
+.ds-home__blob {
+  &--pink {
+    @include decorative-blob(28rem, #ff375f, 0.2);
+
+    top: -8rem;
+    right: -6rem;
+  }
+
+  &--lavender {
+    @include decorative-blob(36rem, #4f008c, 0.15);
+
+    bottom: -10rem;
+    left: -8rem;
+  }
+
+  &--coral {
+    @include decorative-blob(20rem, #ffdc40, 0.12);
+
+    top: 40%;
+    left: 50%;
+  }
+}
+
+.ds-home__body {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  max-width: 36rem;
+}
+
+.ds-home__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-block-end: 1.5rem;
+  padding: 0.375rem 0.875rem;
+  background: var(--doc-surface);
+  border: 1px solid var(--doc-border);
+  border-radius: var(--radius-full, 9999px);
+  box-shadow: var(--shadow-sm, 0 1px 2px rgb(0 0 0 / 4%));
+}
+
+.ds-home__stc {
+  font-size: 1rem;
+  font-weight: var(--font-weight-bold, 700);
+  color: var(--doc-accent);
+  font-style: italic;
+}
+
+.ds-home__brand-divider {
+  width: 1px;
+  height: 1rem;
+  background: var(--doc-border-strong);
+}
+
+.ds-home__brand-label {
+  font-size: 0.6875rem;
+  font-weight: var(--font-weight-medium, 500);
+  color: var(--doc-text-secondary);
+}
+
+.ds-home__version {
+  font-size: 0.5625rem;
+  font-weight: var(--font-weight-bold, 700);
+  color: var(--doc-accent);
+  background: var(--doc-accent-surface);
+  border: 1px solid var(--purple-200, #d399ff);
+  padding: 0.0625rem 0.3125rem;
+  border-radius: var(--radius-full, 9999px);
+}
+
+.ds-home__title {
+  font-size: 4.25rem;
+  font-weight: var(--font-weight-bold, 700);
+  color: var(--doc-text);
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  margin-block: 0 0.75rem;
+
+  @media (width <= 480px) {
+    font-size: 3rem;
+  }
+}
+
+.ds-home__hint {
+  font-size: 1.25rem;
+  color: var(--doc-text-secondary);
+  margin-block-end: 2.5rem;
+  line-height: 1.6;
+}
+
+// Quick-launch cards grid
+.ds-home__cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+  gap: 0.75rem;
+}
+
+.ds-home__card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1.5rem 0.9rem;
+  background: var(--doc-surface);
+  border: 1px solid var(--doc-border);
+  border-radius: var(--radius-xl, 16px);
+  text-decoration: none;
+  color: var(--doc-text);
+  font-size: 1.05rem;
+  font-weight: var(--font-weight-medium, 500);
+  transition:
+    background 0.15s,
+    border-color 0.15s,
+    transform 0.15s,
+    box-shadow 0.15s;
+
+  &:hover {
+    background: var(--doc-accent-surface);
+    border-color: var(--purple-200, #d399ff);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md, 0 4px 8px rgb(0 0 0 / 6%));
+    color: var(--doc-accent);
+  }
+
+  &:focus-visible {
+    @include mx.focus-ring(var(--doc-focus-ring));
+  }
+}
+
+.ds-home__card-icon {
+  // Used to be emoji/text. Now it mostly contains <ds-icon>.
+  // Give it a consistent container so icons align and hover nicely.
+  width: 3rem;
+  height: 3rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-full, 9999px);
+  background: rgb(79 0 140 / 6%);
+  border: 1px solid rgb(79 0 140 / 12%);
+  transition:
+    background 0.15s,
+    border-color 0.15s,
+    transform 0.15s;
+
+  // Keep any fallback glyphs tidy if present.
+  font-size: 1.35rem;
+  line-height: 1;
+}
+
+.ds-home__card-label {
+  font-size: 1rem;
+  text-align: center;
+}
+
+// Make the icon container react to card hover/focus.
+.ds-home__card:hover .ds-home__card-icon,
+.ds-home__card:focus-visible .ds-home__card-icon {
+  background: rgb(79 0 140 / 10%);
+  border-color: rgb(79 0 140 / 22%);
+  transform: translateY(-1px);
+}
+
+// Home — sectioned quick links (same shell as other doc pages)
+.ds-home-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.ds-home-section__title {
+  font-size: 0.6875rem;
+  font-weight: var(--font-weight-semibold, 600);
+  color: var(--doc-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 0 0 0.75rem;
+}
+
+// =============================================================================
+// § 6  RESPONSIVE OVERRIDES
+// =============================================================================
+
+// Tablet: narrow sidebar, full content
+@media (width >= 768px) and (width <= 1023px) {
+  :root {
+    --doc-sidebar-width: 12.5rem;
+  }
+}
+
+// Mobile: sidebar is off-canvas (handled above via .is-open)
+@media (width <= 767px) {
+  .ds-page-header {
+    padding: 1.25rem 1.25rem 1rem;
+  }
+
+  .ds-page-body {
+    padding: 1.5rem 1.25rem 3rem;
+  }
+
+  .ds-header {
+    padding: 0 1rem;
+  }
+
+  .ds-header__search-input {
+    width: 8rem;
+
+    &:focus {
+      width: 12rem;
+    }
+  }
+}
+
+// =============================================================================
+// § 7  PRINT
+// =============================================================================
+@media print {
+  .ds-sidebar,
+  .ds-sidebar-overlay,
+  .ds-header,
+  .ds-sidebar-toggle,
+  .ds-skip-link {
+    display: none !important;
+  }
+
+  .ds-main {
+    margin-inline-start: 0 !important;
+  }
+
+  .ds-content {
+    padding: 0;
+  }
+}

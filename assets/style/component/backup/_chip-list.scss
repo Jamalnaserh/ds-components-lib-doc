@@ -1,0 +1,37 @@
+// mat-chip-list
+.primary-chip{
+  &.small{
+    .mat-mdc-chip{
+      height: var(--default-size-sm);
+    }
+  }
+
+  /* TODO(mdc-migration): The following rule targets internal classes of chips that may no longer apply for the MDC version. */
+  .mat-chip-list-wrapper{
+    overflow: auto;
+    flex-wrap: nowrap;
+  }
+
+  .mat-mdc-chip{
+    color: var(--black);
+    background-color: var(--light-gray);
+    border: 1px solid var(--light-gray);
+    height: 24px;
+    border-radius: 0;
+    padding: 0 10px;
+    white-space: nowrap;
+
+    &::after {
+      background: transparent;
+    }
+
+    .mat-icon{
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color:var(--dark-gray);
+      opacity: 1;
+    }
+  }
+}

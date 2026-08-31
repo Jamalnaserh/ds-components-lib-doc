@@ -1,0 +1,18 @@
+<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+<circle cx="13.5" cy="12.0103" r="7" stroke="currentColor" fill="none"/>
+<mask id="mask0_283_3968" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="2" y="4" width="16" height="16">
+<circle cx="10.1428" cy="11.7551" r="7.2551" stroke="currentColor" fill="none"/>
+</mask>
+<g mask="url(#mask0_283_3968)">
+<circle cx="13.5" cy="12.0103" r="7" fill="currentColor" stroke="currentColor"/>
+</g>
+<path d="M13.2448 1V3.20009" stroke="currentColor" fill="none"/>
+<path d="M13.2357 23.4895V21.2894" stroke="currentColor" fill="none"/>
+<path d="M8.7572 22.5552L9.63526 20.5379" stroke="currentColor" fill="none"/>
+<path d="M5.26184 20.1643L6.82322 18.6154" stroke="currentColor" fill="none"/>
+<path d="M2.72559 16.2188L4.78372 15.4413" stroke="currentColor" fill="none"/>
+<path d="M2 12.2383H4.20009" stroke="currentColor" fill="none"/>
+<path d="M2.97791 7.65845L4.98645 8.55569" stroke="currentColor" fill="none"/>
+<path d="M5.32214 4.26514L6.87169 5.82589" stroke="currentColor" fill="none"/>
+<path d="M9.22302 1.7439L10.0099 3.79845" stroke="currentColor" fill="none"/>
+</svg>

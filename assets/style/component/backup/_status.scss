@@ -1,0 +1,113 @@
+// uncomment the below to override custom webcomponents by change the $root-colors and also u can change the status name from status color array
+
+// @use "../variables";
+//
+//
+// $status-colors: (
+//  purple: --ds-purple,
+//  secondary: --ds-secondary,
+//  coral: --ds-coral,
+//  pending: --ds-gray,
+//  info: --ds-sea-light,
+//  success: --ds-green,
+//  warning: --ds-yellow,
+//  rejected: --ds-red,
+//  //orange: var(--ds-orange),
+// );
+//
+// @mixin generate_status($colors) {
+//  // Colors, RGB Colors
+//  @each $color, $value in $colors {
+//
+//    ds-status[status = #{"" +$color}] {
+//      &::part(base){
+//        --status-bg: rgb(var(#{$value}));
+//        --status-color: white;
+//      }
+//    }
+//
+//    ds-status.opacity[status = #{"" +$color}] {
+//      &::part(base){
+//        --status-bg: rgb(var(#{$value}-80));
+//        --status-color: rgb(var(#{$value}));
+//
+//        @if( $color == gray ){
+//          --status-color: rgb(var(--ds-black));
+//        }
+//      }
+//    }
+//  }
+// }
+//
+// @include generate_status($status-colors);
+
+// the old status
+
+// .status{
+//  min-width: 97px;
+//  //width: 75px;
+//  min-height: 27px;
+//  padding: 0 15px;
+//  font-size: 0.875rem;
+//  font-weight: var(--font-medium);
+//  display: inline-flex;
+//  align-items: center;
+//  justify-content: center;
+//  text-transform: capitalize;
+//  line-height: 1;
+//
+//  &.new, &.active{
+//    color:  var(--sea-light);
+//    background-color: rgba( var(--rgb-sea-light), .1);
+//  }
+//  &.waiting{
+//    color: $yellow;
+//    background-color: #F9F2D1;
+//  }
+//  &.dropped, &.rejected{
+//    color: $danger;
+//    background-color: #FBECEF;
+//  }
+//  &.onhold{
+//    color: var(--black);
+//    background-color: rgba(#E1E2E3, .45);
+//  }
+//  &.pending{
+//    color: var(--black);
+//    //background-color: rgba(#E1E2E3, .45);
+//    background-color: #F9F2D1;
+//  }
+//  &.approved, &.completed{
+//    color:var(--green);
+//    background-color: #E9F4F1;
+//  }
+//  &.published, &.inprogress, &.submitted{
+//    color:var(--purple);
+//    background-color: #EFD9FF;
+//  }
+//  .page-header &, .notification-center &{
+//    color:var(--white);
+//    &.new, &.active{
+//      background-color:  var(--sea-light);
+//    }
+//    &.waiting{
+//      background-color: $yellow;
+//    }
+//    &.dropped, &.rejected{
+//      background-color: $danger;
+//    }
+//    &.onhold{
+//      background-color: var(--black);
+//    }
+//    &.pending{
+//      color: var(--black);
+//      background-color:var(--dark-gray);
+//    }
+//    &.approved, &.completed{
+//      background-color:var(--green);
+//    }
+//    &.published, &.inprogress{
+//      background-color:var(--purple);
+//    }
+//  }
+// }

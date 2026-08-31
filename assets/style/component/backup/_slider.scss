@@ -1,0 +1,157 @@
+.mat-mdc-slider.mat-primary {
+  --mdc-slider-handle-color: var(--white);
+  --mdc-slider-focus-handle-color: var(--white);
+  --mdc-slider-hover-handle-color: var(--white);
+  --mdc-slider-active-track-color: var(--coral);
+  --mdc-slider-inactive-track-color: var(--dark-gray);
+  --mdc-slider-with-tick-marks-active-container-color: var(--white);
+  --mdc-slider-with-tick-marks-inactive-container-color: var(--dark-gray);
+  --mat-mdc-slider-ripple-color: var(--dark-gray);
+  --mat-mdc-slider-hover-ripple-color: rgba(var(--rgb-dark-gray), 5%);
+  --mat-mdc-slider-focus-ripple-color: rgba(var(--rgb-dark-gray), 5%);
+  --mdc-slider-label-container-color: var(--black);
+  --mat-mdc-slider-value-indicator-opacity: 1;
+
+  margin-right: 0;
+  margin-left: 0;
+  width: 100%;
+}
+
+mat-slider {
+  width: 100%;
+
+  .video-controls & {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    padding: 0;
+  }
+
+  /* TODO(mdc-migration): The following rule targets internal classes of slider that may no longer apply for the MDC version. */
+
+  /* TODO(mdc-migration): The following rule targets internal classes of slider that may no longer apply for the MDC version. */
+
+  /* TODO(mdc-migration): The following rule targets internal classes of slider that may no longer apply for the MDC version. */
+
+  /* TODO(mdc-migration): The following rule targets internal classes of slider that may no longer apply for the MDC version. */
+
+  /* TODO(mdc-migration): The following rule targets internal classes of slider that may no longer apply for the MDC version. */
+  &.mat-slider-horizontal {
+    /* TODO(mdc-migration): The following rule targets internal classes of slider that may no longer apply for the MDC version. */
+
+    /* TODO(mdc-migration): The following rule targets internal classes of slider that may no longer apply for the MDC version. */
+
+    /* TODO(mdc-migration): The following rule targets internal classes of slider that may no longer apply for the MDC version. */
+
+    /* TODO(mdc-migration): The following rule targets internal classes of slider that may no longer apply for the MDC version. */
+    .mat-slider-wrapper {
+      height: 10px;
+
+      .volume-change &{
+        height: 5px;
+      }
+
+      .video-controls & {
+        left: 0;
+        right: 0;
+        top: 15px;
+      }
+
+      /* TODO(mdc-migration): The following rule targets internal classes of slider that may no longer apply for the MDC version. */
+
+      /* TODO(mdc-migration): The following rule targets internal classes of slider that may no longer apply for the MDC version. */
+      .mat-slider-track-wrapper {
+        height: 10px;
+        width: 100%;
+
+        .volume-change &{
+          height: 5px;
+        }
+
+        /* TODO(mdc-migration): The following rule targets internal classes of slider that may no longer apply for the MDC version. */
+        .mat-slider-track-background {
+          background-color: var(--light-gray);
+          height: 10px;
+
+          .volume-change &{
+            height: 5px;
+          }
+        }
+
+        /* TODO(mdc-migration): The following rule targets internal classes of slider that may no longer apply for the MDC version. */
+        .mat-slider-track-fill {
+          background-color: var(--coral);
+          height: 10px;
+
+          .volume-change &{
+            height: 5px;
+          }
+        }
+      }
+
+      /* TODO(mdc-migration): The following rule targets internal classes of slider that may no longer apply for the MDC version. */
+      .mat-slider-ticks-container {
+        display: none;
+      }
+
+      /* TODO(mdc-migration): The following rule targets internal classes of slider that may no longer apply for the MDC version. */
+
+      /* TODO(mdc-migration): The following rule targets internal classes of slider that may no longer apply for the MDC version. */
+
+      /* TODO(mdc-migration): The following rule targets internal classes of slider that may no longer apply for the MDC version. */
+      .mat-slider-thumb-container {
+        /* TODO(mdc-migration): The following rule targets internal classes of slider that may no longer apply for the MDC version. */
+        .mat-slider-thumb {
+          right: -12px;
+          bottom: -12px;
+          width: 24px;
+          height: 24px;
+          border: 0;
+          border-radius: 0;
+          background-color: var(--purple);
+          transform: scale(1) !important;
+
+          .video-controls & {
+            right: -8px;
+            bottom: -8px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+          }
+
+          .volume-change & {
+            right: -5px;
+            bottom: -5px;
+            width: 10px;
+            height: 10px;
+          }
+        }
+
+        /* TODO(mdc-migration): The following rule targets internal classes of slider that may no longer apply for the MDC version. */
+
+        /* TODO(mdc-migration): The following rule targets internal classes of slider that may no longer apply for the MDC version. */
+        .mat-slider-thumb-label {
+          display: flex;
+          opacity: 1;
+          transform: none;
+          bottom: -40px;
+          top: auto;
+          background: transparent;
+
+          .video-controls & {
+            display: none !important;
+          }
+
+          /* TODO(mdc-migration): The following rule targets internal classes of slider that may no longer apply for the MDC version. */
+          .mat-slider-thumb-label-text {
+            opacity: 1;
+            transform: none;
+            color:var(--dark-gray);
+            font-weight: 500;
+          }
+        }
+      }
+    }
+  }
+}

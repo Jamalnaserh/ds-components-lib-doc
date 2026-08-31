@@ -1,0 +1,105 @@
+.info-section,
+.form-section {
+  --name-fs: 0.875rem;
+  --name-fc: var(--dark-gray);
+  --name-fw: var(--font-regular);
+  --name-width: 270px;
+  --disc-fs: 0.875rem;
+  --disc-fc: var(--black);
+  --disc-fw: var(--font-medium);
+  --disc-width: calc(100% - var(--name-width) - var(--info-gap));
+  --info-gap: 1rem;
+  --info-item-bg: var(--white);
+  --info-item-bg-striped: var(--light-gray);
+  --info-item-padding: 0.75rem 1.5rem;
+  --info-item-display: flex;
+  --info-item-align: center;
+  --uploade-file-bg: var(--light-gray);
+  --uploade-file-bg-striped: var(--white);
+}
+
+.info-section {
+  @media (width <= 768px) {
+    --name-width: 100%;
+    --disc-width: 100%;
+    --info-gap: 0;
+    --info-item-padding: 1rem;
+  }
+
+  &.reverse {
+    --info-item-bg: var(--light-gray);
+    --info-item-bg-striped: var(--white);
+    --uploade-file-bg: var(--white);
+    --uploade-file-bg-striped: var(--light-gray);
+  }
+
+  &.no-bg {
+    --info-item-bg: transparent;
+    --info-item-bg-striped: transparent;
+  }
+
+  > .section-item,
+  > .info-item {
+    background-color: var(--info-item-bg);
+
+    // --info-item-display: block;
+
+    &:nth-child(odd) {
+      --uploade-file-bg: var(--uploade-file-bg-striped);
+
+      background-color: var(--info-item-bg-striped);
+    }
+  }
+
+  .section-item {
+    display: block;
+  }
+
+  .info-item {
+    display: var(--info-item-display);
+    align-items: var(--info-item-align);
+    flex-wrap: wrap;
+    padding: var(--info-item-padding);
+    gap: var(--info-gap);
+
+    > .name {
+      width: var(--name-width);
+      font-size: var(--name-fs);
+      font-weight: var(--name-fw);
+      color: var(--name-fc);
+      text-align: start;
+    }
+
+    > .disc {
+      width: var(--disc-width);
+      font-size: var(--disc-fs);
+      font-weight: var(--disc-fw);
+      color: var(--disc-fc);
+      text-align: start;
+
+      .file-item {
+        --file-height: 70px;
+        --file-bg: var(--uploade-file-bg);
+      }
+    }
+  }
+}
+
+.form-section {
+  --form-section-display: grid;
+  --form-section-columns: 75%;
+  --form-section-col-gap: 2.5rem;
+  --form-section-row-gap: 0.5rem;
+
+  display: var(--form-section-display);
+  grid-template-columns: var(--form-section-columns);
+  grid-gap: var(--form-section-row-gap) var(--form-section-col-gap);
+
+  @media (width <= 768px) {
+    --form-section-columns: 100%;
+  }
+
+  .section-item {
+    --info-item-display: block;
+  }
+}
