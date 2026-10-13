@@ -1,6 +1,9 @@
 # ui-lib-doc (local docs)
 
-**Live docs:** [ds-components-lib-doc](https://jamalnaserh.github.io/ds-components-lib-doc/?path=/docs/foundations-colors--docs)
+Links
+
+- Library (NPM): [ds-components-lib](https://www.npmjs.com/package/ds-components-lib?activeTab=readme)
+- Live docs: [ds-components-lib-doc](https://jamalnaserh.github.io/ds-components-lib-doc/?path=/docs/foundations-colors--docs)
 
 ## First-time setup
 
