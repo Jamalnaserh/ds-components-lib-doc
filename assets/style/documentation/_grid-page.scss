@@ -1,0 +1,103 @@
+@use "sass:color";
+
+// Grid page only. Safe to include globally via documentation/_index.scss.
+
+.spec-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--doc-surface);
+  border: 1px solid var(--doc-border);
+  border-radius: var(--radius-lg, 12px);
+  overflow: hidden;
+
+  th,
+  td {
+    padding: 0.75rem 0.875rem;
+    text-align: start;
+    border-bottom: 1px solid var(--doc-border);
+    vertical-align: top;
+  }
+
+  thead th {
+    font-size: 0.75rem;
+    font-weight: var(--font-weight-semibold, 600);
+    color: var(--doc-text-secondary);
+    background: var(--doc-surface-header);
+    border-bottom-color: var(--doc-border-strong);
+  }
+
+  tbody tr:last-child td {
+    border-bottom: 0;
+  }
+}
+
+.spec-token {
+  font-family: var(
+    --font-family-mono,
+    ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    Monaco,
+    Consolas,
+    "Liberation Mono",
+    "Courier New",
+    monospace
+  );
+  font-size: 0.8125rem;
+  color: var(--doc-accent);
+  background: var(--doc-accent-surface);
+  border: 1px solid var(--purple-200, #d399ff);
+  padding: 0.125rem 0.375rem;
+  border-radius: var(--radius-sm, 4px);
+  word-break: break-word;
+}
+
+.grid-demo-section {
+  margin-block: 1.5rem 2.5rem;
+}
+
+.grid-demo-title {
+  font-size: 1.125rem;
+  font-weight: var(--font-weight-bold, 700);
+  margin: 0 0 0.75rem;
+}
+
+.grid-demo-label {
+  font-size: 0.875rem;
+  color: var(--doc-text-secondary);
+  margin: 1rem 0 0.5rem;
+}
+
+.grid-row-demo {
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border: 1px solid var(--doc-border);
+  border-radius: var(--radius-lg, 12px);
+  background: var(--doc-surface);
+  overflow-x: auto;
+}
+
+.grid-col {
+  min-width: 3.25rem;
+  padding: 0.75rem 0.5rem;
+  border-radius: var(--radius-md, 8px);
+  border: 1px dashed var(--doc-border-strong);
+  background: color.mix(#4f008c, #fff, 6%);
+  color: var(--doc-text);
+  font-size: 0.8125rem;
+  font-weight: var(--font-weight-medium, 500);
+  text-align: center;
+  white-space: nowrap;
+}
+
+@media (width <= 767px) {
+  .grid-row-demo {
+    gap: 0.5rem;
+    padding: 0.625rem;
+  }
+
+  .grid-col {
+    min-width: 2.75rem;
+  }
+}

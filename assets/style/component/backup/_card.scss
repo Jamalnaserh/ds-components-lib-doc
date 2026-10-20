@@ -1,0 +1,23 @@
+// uncomment the below to override custom webcomponents by change the $root-colors
+
+// @use "status";
+//
+//
+// @mixin generate_card_status($colors) {
+//  // Colors, RGB Colors
+//  @each $color, $value in $colors {
+//    ds-card[card-status = #{"" +$color}] {
+//      &::part(status){
+//        --status-border-color: rgb(var(#{$value}));
+//      }
+//    }
+//
+//    ds-card.opacity[status = #{"" +$color}] {
+//      &::part(status){
+//        --status-border-color: rgb(var(#{$value}-80))
+//      }
+//    }
+//  }
+// }
+//
+// @include generate_card_status(status.$status-colors);

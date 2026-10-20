@@ -1,0 +1,117 @@
+.list-unstyled {
+  list-style: none;
+  padding: 0;
+}
+
+.dotted-list {
+  list-style: none;
+  margin-bottom: 0;
+
+  li {
+    display: flex;
+    align-items: baseline;
+    margin: 0 -5px 10px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    &::before {
+      content: "";
+      min-width: 9px;
+      height: 9px;
+      background-color: var(--coral);
+      margin: 0 5px;
+    }
+  }
+
+  &.gray-dot {
+    li {
+      &::before {
+        background-color: var(--light-gray);
+      }
+    }
+  }
+
+  &.dark-gray-dot {
+    li {
+      &::before {
+        background-color: var(--dark-gray);
+      }
+    }
+  }
+}
+
+.user-list,
+.category-list {
+  display: grid !important;
+  grid-auto-flow: column;
+
+  // grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); /* see notes below */
+  grid-template-columns: 260px;
+  grid-gap: 0.75rem;
+  padding-top: 0 !important;
+  padding-bottom: 0.5rem;
+  overflow: auto hidden;
+
+  &.column {
+    grid-auto-flow: row;
+    grid-template-columns: 1fr;
+    overflow: auto;
+
+    .mat-list-item {
+      min-width: auto !important;
+      max-width: initial !important;
+      height: 70px !important;
+    }
+  }
+
+  .mat-list-item {
+    // width: 260px !important;
+    min-width: 260px !important;
+    max-width: 260px !important;
+    height: 53px !important;
+    background-color: var(--light-gray);
+    border: 1px solid var(--light-gray);
+    margin-bottom: 0;
+
+    .img-card {
+      order: -1;
+    }
+
+    .mat-line {
+      white-space: normal;
+      max-width: 144px;
+    }
+  }
+}
+
+.chip-list {
+  display: flex !important;
+  flex-wrap: nowrap;
+  padding-top: 0 !important;
+  margin: 0 !important;
+  grid-gap: 0.5rem;
+  overflow: auto hidden;
+
+  .mat-list-item {
+    width: auto !important;
+    height: 28px !important;
+    background-color: var(--light-gray);
+    border: 1px solid var(--light-gray);
+
+    .mat-list-item-content {
+      padding: 0 0.5rem !important;
+
+      .mat-line {
+        font-size: 0.75rem;
+      }
+
+      .mat-icon-button {
+        min-width: 16px !important;
+        width: 16px !important;
+        height: 16px !important;
+      }
+    }
+  }
+}

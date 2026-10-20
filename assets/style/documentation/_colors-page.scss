@@ -1,0 +1,126 @@
+// ── Layout ─────────────────────────────────────────────────────────────────
+.color-section {
+  padding: 2.25rem 0 2rem;
+  border-bottom: 1px solid var(--ds-border, #ebebeb);
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.color-section__title {
+  font-size: 1.375rem;
+  font-weight: 700;
+  color: var(--ds-black, #1d252d);
+  margin-bottom: 1.25rem;
+}
+
+.swatch-row {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.swatch-item {
+  flex: 1;
+  min-width: 7rem;
+  max-width: 10rem;
+}
+
+// ── Swatch card ────────────────────────────────────────────────────────────
+.swatch-card {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: 0.75rem;
+  margin-bottom: 0.625rem;
+  border: 1px solid rgb(0 0 0 / 6%);
+  position: relative;
+  cursor: pointer;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+
+  &:hover,
+  &:focus-visible {
+    transform: translateY(-2px);
+    box-shadow: 0 0.5rem 1.25rem rgb(0 0 0 / 10%);
+    outline: 2px solid var(--ds-focus-ring, #4f008c);
+    outline-offset: 2px;
+  }
+
+  // "Copy" overlay
+  &::after {
+    content: attr(data-hex);
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #fff;
+    background: rgb(0 0 0 / 35%);
+    opacity: 0;
+    transition: opacity 0.15s;
+    pointer-events: none;
+  }
+
+  &:hover::after {
+    opacity: 1;
+    content: "Copy";
+  }
+
+  &.is-copied::after {
+    opacity: 1 !important;
+    content: "Copied ✓" !important;
+    background: rgb(0 0 0 / 50%) !important;
+  }
+}
+
+// ── Swatch metadata ────────────────────────────────────────────────────────
+.swatch-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.swatch-scale {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--ds-dark-grey, #8399af);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.swatch-hex {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--ds-black, #1d252d);
+  font-variant-numeric: tabular-nums;
+}
+
+.swatch-token {
+  font-size: 0.6875rem;
+  color: var(--ds-dark-grey, #8399af);
+}
+
+// ── Alias tags ─────────────────────────────────────────────────────────────
+.swatch-aliases {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.1875rem;
+  margin-top: 0.25rem;
+}
+
+.alias-tag {
+  display: inline-block;
+  font-size: 0.5938rem;
+  padding: 0.0625rem 0.3125rem;
+  border-radius: 0.25rem;
+  background: #f3f3f1;
+  color: #4f008c;
+  font-weight: 500;
+  border: 1px solid #e9ccff;
+  white-space: nowrap;
+}

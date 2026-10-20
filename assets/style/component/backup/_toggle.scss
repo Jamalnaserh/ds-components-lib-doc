@@ -1,0 +1,120 @@
+// mat-button-toggle-group
+.mat-button-toggle-group{
+  --toggle-height: var(--default-size);
+  --toggle-width: 80px;
+  --toggle-color: var(--dark-gray);
+  --toggle-color-active: var(--white);
+  --toggle-bg: var(--light-gray);
+  --toggle-bg-active: var(--purple);
+  --toggle-border: 0;
+  --toggle-group-border: 0;
+  --toggle-group-radius: var(--box-radius);
+  --toggle-radius: var(--box-radius);
+  --toggle-fw: var(--font-regular);
+  --toggle-fs: 0.875rem;
+  --toggle-padding: 0 1rem;
+
+
+
+  border: var(--toggle-group-border) !important;
+  border-radius: var(--toggle-group-radius);
+  margin: 0;
+  flex-wrap: wrap;
+  gap: var(--toggle-gap, .75rem);
+
+  &.icon-toggle{
+    --toggle-gap: 0;
+    --toggle-group-radius: var(--box-radius);
+    --toggle-radius: 0px;
+    --toggle-width: var(--default-size);
+    --toggle-height: var(--default-size);
+
+    overflow: hidden;
+  }
+
+  // color-btn-toggle
+  .color-btn-toggle{
+    --toggle-width: var(--default-size);
+
+    display: grid !important;
+    grid-template-columns: repeat(4, var(--default-size));
+
+    .mat-button-toggle{
+      &.mat-button-toggle-checked, &:hover{
+        .mat-button-toggle-button{
+          background-color: inherit;
+          color: inherit;
+
+          .mat-button-toggle-label-content{
+            &::before{
+              opacity: 1;
+            }
+          }
+        }
+      }
+
+      .mat-button-toggle-button{
+        background-color: inherit !important;
+        height: 100%;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        .mat-button-toggle-label-content{
+          height: 100%;
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          &::before{
+            content: "\e957";
+            font-family: stc-font-icons;
+            opacity: 0;
+            color:var(--white);
+            transition: all .3s linear;
+          }
+        }
+      }
+
+    }
+  }
+
+  .mat-button-toggle{
+    border: 0 !important;
+    margin: 0;
+    min-width: var(--toggle-width);
+    height: var(--toggle-height);
+
+    &.mat-button-toggle-checked{
+      --toggle-bg: var(--toggle-bg-active);
+      --toggle-color:var(--toggle-color-active);
+    }
+
+    .mat-button-toggle-button{
+      background: var(--toggle-bg);
+      color: var(--toggle-color);
+      border: var(--toggle-border);
+      border-radius: var(--toggle-radius);
+      height: inherit;
+
+      .mat-button-toggle-label-content{
+        font-weight: var(--toggle-fw);
+        line-height: var(--default-size);
+        padding: var(--toggle-padding);
+        font-size: var(--toggle-fs);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        height: inherit;
+      }
+    }
+  }
+
+}
+
+
+
+
+

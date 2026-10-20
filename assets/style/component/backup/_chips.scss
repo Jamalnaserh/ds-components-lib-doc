@@ -1,0 +1,51 @@
+
+/* TODO(mdc-migration): The following rule targets internal classes of chips that may no longer apply for the MDC version. */
+
+/* TODO(mdc-migration): The following rule targets internal classes of chips that may no longer apply for the MDC version. */
+.mat-chip-list-wrapper{
+  --chips-bc: var(--light-gray);
+  --chips-bc-hover: var(--light-gray);
+  --chips-fs: 0.875rem;
+  --chips-fw: var(--font-regular);
+  --chips-fc: var(--black);
+  --chips-padding: 0.5rem 0.75rem;
+  --chips-radius: 3px;
+  --chips-margin: 0;
+  --chips-gap: 0.75rem;
+
+
+  margin: 0 !important;
+  gap: 0.5rem;
+
+  .mat-mdc-chip{
+    margin: var(--chips-margin) !important;
+    background-color: var(--chips-bc);
+    font-size: var(--chips-fs);
+    font-weight: var(--chips-fw);
+    color: var(--chips-fc);
+    padding: var(--chips-padding) !important;
+    border-radius: var(--chips-radius);
+    gap: var(--chips-gap);
+
+    /* TODO(mdc-migration): The following rule targets internal classes of chips that may no longer apply for the MDC version. */
+    .mat-chip-remove{
+      margin: 0;
+      opacity: 1 !important;
+
+      &::part(base){
+        --btn-height: 20px;
+        --btn-width: 20px;
+        --btn-min-width: 20px;
+        --btn-padding: 0;
+        --btn-fs: 1rem;
+        --btn-color: var(--red);
+        --btn-bg-color: var(--white);
+        --btn-border-color: var(--white);
+
+        &:hover{
+          --btn-color: var(--red);
+        }
+      }
+    }
+  }
+}

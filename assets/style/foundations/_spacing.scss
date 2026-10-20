@@ -1,0 +1,101 @@
+// Spacing scale and semantic tokens.
+
+// ─────────────────────────────────────────────────────────────────────────────
+// PRIMARY SPACING SCALE (numeric, 16 px base)
+// Used by Bootstrap's $spacers map and all utility-class generators.
+// Keys intentionally match the pixel value so .m-16 means 16 px of margin.
+// ─────────────────────────────────────────────────────────────────────────────
+$spacing-scale: (
+  "0": 0,
+  "4": 0.25rem,
+  //  4 px
+  "8": 0.5rem,
+  //  8 px
+  "12": 0.75rem,
+  // 12 px
+  "16": 1rem,
+  // 16 px
+  "20": 1.25rem,
+  // 20 px
+  "24": 1.5rem,
+  // 24 px
+  "32": 2rem,
+  // 32 px
+  "36": 2.25rem,
+  // 36 px
+  "48": 3rem,
+  // 48 px
+  "64": 4rem,
+  // 64 px
+  "80": 5rem,
+  // 80 px
+  "96": 6rem,
+  // 96 px
+  "112": 7rem,
+  // 112 px
+  "128": 8rem,
+  // 128 px
+  "144": 9rem,
+  // 144 px
+  "160": 10rem, // 160 px
+) !default;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// SEMANTIC ALIASES
+// Named shortcuts consumed by component-level SCSS (not utility generators).
+// They map to the numeric scale above to stay DRY.
+// ─────────────────────────────────────────────────────────────────────────────
+$space-none: 0;
+$space-xs: 0.25rem; //  4 px
+$space-sm: 0.5rem; //  8 px
+$space-md: 1rem; // 16 px
+$space-lg: 1.5rem; // 24 px
+$space-xl: 2rem; // 32 px
+$space-2xl: 3rem; // 48 px
+$space-3xl: 4rem; // 64 px
+
+// Semantic names → emitted on :root as --spacing-{name} (see global.scss).
+// Values stay aligned with $space-* / string keys in $spacers below.
+$spacing-named: (
+  "none": $space-none,
+  "xs": $space-xs,
+  "sm": $space-sm,
+  "md": $space-md,
+  "lg": $space-lg,
+  "xl": $space-xl,
+  "2xl": $space-2xl,
+  "3xl": $space-3xl,
+) !default;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// BOOTSTRAP $spacer OVERRIDE
+// Bootstrap derives its full $spacers map from this single base value.
+// We set it to 1 rem (16 px) which aligns with our Spacing-16 token.
+// ─────────────────────────────────────────────────────────────────────────────
+$spacer: 1rem !default;
+
+// Bootstrap's default $spacers map (keys 0–5) is extended here so BS
+// utility classes like .mt-3 etc. continue to work alongside our custom ones.
+// We intentionally keep Bootstrap's scale intact and add DS keys on top.
+$spacers: (
+  0: 0,
+  1: $spacer * 0.25,
+  //  4 px
+  2: $spacer * 0.5,
+  //  8 px
+  3: $spacer,
+  // 16 px
+  4: $spacer * 1.5,
+  // 24 px
+  5: $spacer * 3,
+
+  // 48 px
+  // DS named spacing — enables .mt-sm, .p-lg, etc. alongside Bootstrap's .mt-3
+  "xs": $space-xs,
+  "sm": $space-sm,
+  "md": $space-md,
+  "lg": $space-lg,
+  "xl": $space-xl,
+  "2xl": $space-2xl,
+  "3xl": $space-3xl,
+) !default;

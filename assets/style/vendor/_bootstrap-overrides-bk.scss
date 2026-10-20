@@ -1,0 +1,294 @@
+// =============================================================================
+// Bootstrap overrides — STC eServices Design System
+//
+// Scope: this project @imports ONLY reboot, type, root, containers, grid,
+// helpers, and utilities (see bootstrap.scss). All other Bootstrap partials
+// (_buttons, _forms, _cards, _modal, _dropdown, _alert, _nav, _navbar,
+// _pagination, _progress, _list-group, _breadcrumb, _tables, _badge,
+// _tooltip, _form-check, _form-control, …) are NOT loaded — those UI
+// elements are provided by DS web components (ds-button, ds-input, etc.).
+//
+// Therefore this file only defines the variables those imported partials
+// actually consume:
+//   • _functions / _variables / _maps  → palette, theme map, prefix flags
+//   • _reboot                          → body/link/border base colors,
+//                                        font family/size/weight, headings
+//   • _type                            → h1–h6 sizes, line-height, color
+//   • _root                            → emits :root CSS custom properties
+//   • _containers / _grid              → breakpoints, gutter, columns
+//   • _helpers / _utilities (+ api)    → consume $theme-colors / $spacers /
+//                                        $border-radius-* / $box-shadow-*
+//
+// Anything beyond that scope was removed to prevent drift and keep the
+// surface area honest. A commented BLOCK B at the bottom holds the larger
+// component config — uncomment when you actually @import the matching
+// Bootstrap partial.
+// =============================================================================
+
+@use "sass:color";
+@use "foundations/colors" as c;
+@use "foundations/typography" as t;
+@use "foundations/spacing" as s;
+@use "foundations/radius" as rd;
+@use "foundations/shadows" as sh;
+@use "foundations/grid" as g;
+
+
+// ─────────────────────────────────────────────────────────────────────────────
+// FEATURE FLAGS
+// ─────────────────────────────────────────────────────────────────────────────
+$enable-dark-mode:          false !default;
+$enable-rounded:            true  !default; // rounded utilities (.rounded, .rounded-1 …)
+$enable-shadows:            false !default;
+$enable-gradients:          false !default;
+$enable-transitions:        true  !default;
+$enable-reduced-motion:     true  !default;
+$enable-smooth-scroll:      true  !default;
+$enable-negative-margins:   false !default;
+$enable-cssgrid:            false !default;
+$enable-container-classes:  true  !default;
+$enable-important-utilities: true !default;
+
+// Custom-property prefix on emitted vars: --ds-primary, --ds-body-color, etc.
+$variable-prefix: ds- !default;
+$prefix:          ds- !default;
+
+
+// ─────────────────────────────────────────────────────────────────────────────
+// PALETTE — feed Bootstrap's $theme-colors map
+// Used by: _root (emits --ds-primary etc.), _utilities (.bg-*, .text-*,
+// .border-*, .link-*), _helpers.
+// ─────────────────────────────────────────────────────────────────────────────
+$primary:   c.$primary   !default;
+$secondary: c.$secondary !default;
+$success:   c.$success   !default;
+$danger:    c.$danger    !default;
+$warning:   c.$warning   !default;
+$info:      c.$info      !default;
+$light:     c.$light-grey !default;
+$dark:      c.$black     !default;
+$white:     c.$white     !default;
+$black:     c.$black     !default;
+$theme-colors: c.$theme-colors !default;
+
+// Lower this to avoid noisy @warn output from Bootstrap's color-contrast()
+// when no candidate text colour reaches 4.5:1. Keeps the logic working;
+// silences the build noise.
+$min-contrast-ratio:   3        !default;
+$color-contrast-dark:  c.$black !default;
+$color-contrast-light: c.$white !default;
+
+
+// ─────────────────────────────────────────────────────────────────────────────
+// BODY / LINK / BORDER — consumed by _reboot, _type, and emitted by _root
+// ─────────────────────────────────────────────────────────────────────────────
+$body-color:           c.$black      !default;
+$body-bg:              c.$white      !default;
+$body-secondary-color: c.$dark-grey  !default;
+$body-secondary-bg:    c.$light-grey !default;
+
+// Link hover: a darker shade was used before, which on the very-dark
+// $primary (#4f008c) produced a near-black hover. Using $primary-light
+// (purple-400) gives the conventional "lift on hover" feel. Override
+// in app-level CSS if you prefer the inverse.
+$link-color:       c.$primary       !default;
+$link-hover-color: c.$primary-light !default;
+$link-decoration:        none       !default;
+$link-hover-decoration:  underline  !default;
+$border-color: c.$grey-200 !default;  // grey-200 = #e6e9eb (DS "Grey")
+$border-width: 1px         !default;
+
+
+// ─────────────────────────────────────────────────────────────────────────────
+// TYPOGRAPHY — consumed by _reboot and _type
+// ─────────────────────────────────────────────────────────────────────────────
+$font-family-base:    t.$font-family-base    !default;
+$font-family-code:    t.$font-family-mono    !default;
+$font-size-base:      t.$font-size-base      !default;
+$font-size-sm:        t.$font-size-sm        !default;
+$font-size-lg:        t.$font-size-lg        !default;
+$font-weight-normal:  t.$font-weight-normal  !default;
+$font-weight-medium:  t.$font-weight-medium  !default;
+$font-weight-bold:    t.$font-weight-bold    !default;
+$line-height-base:    t.$line-height-base    !default;
+$h1-font-size:        t.$h1-font-size        !default;
+$h2-font-size:        t.$h2-font-size        !default;
+$h3-font-size:        t.$h3-font-size        !default;
+$h4-font-size:        t.$h4-font-size        !default;
+$h5-font-size:        t.$h5-font-size        !default;
+$h6-font-size:        t.$h6-font-size        !default;
+$headings-font-weight: t.$headings-font-weight !default;
+$headings-line-height: t.$headings-line-height !default;
+$headings-color:       c.$black              !default;
+
+
+// ─────────────────────────────────────────────────────────────────────────────
+// SPACING — feeds $spacers map, consumed by _utilities (.p-*, .m-*, .gap-*)
+// ─────────────────────────────────────────────────────────────────────────────
+$spacer:  s.$spacer  !default;
+$spacers: s.$spacers !default;
+
+
+// ─────────────────────────────────────────────────────────────────────────────
+// BORDER RADIUS — consumed by _utilities (.rounded, .rounded-1 …)
+// ─────────────────────────────────────────────────────────────────────────────
+$border-radius:      rd.$border-radius      !default;
+$border-radius-sm:   rd.$border-radius-sm   !default;
+$border-radius-lg:   rd.$border-radius-lg   !default;
+$border-radius-xl:   rd.$border-radius-xl   !default;
+$border-radius-xxl:  rd.$border-radius-xxl  !default;
+$border-radius-pill: rd.$border-radius-pill !default;
+
+
+// ─────────────────────────────────────────────────────────────────────────────
+// BOX SHADOW — consumed by _utilities (.shadow, .shadow-sm, .shadow-lg)
+// ─────────────────────────────────────────────────────────────────────────────
+$box-shadow:    sh.$box-shadow    !default;
+$box-shadow-sm: sh.$box-shadow-sm !default;
+$box-shadow-lg: sh.$box-shadow-lg !default;
+
+
+// ─────────────────────────────────────────────────────────────────────────────
+// GRID — consumed by _containers and _grid
+// ─────────────────────────────────────────────────────────────────────────────
+$grid-columns:         g.$grid-columns         !default;
+$grid-gutter-width:    g.$grid-gutter-width    !default;
+$grid-breakpoints:     g.$grid-breakpoints     !default;
+$container-max-widths: g.$container-max-widths !default;
+
+
+// =============================================================================
+// BLOCK B — OPTIONAL COMPONENT CONFIG (currently UNUSED)
+// -----------------------------------------------------------------------------
+// All the variables below are consumed only by Bootstrap component partials
+// (_buttons, _forms, _card, _modal, _dropdown, _alert, _nav, _navbar,
+// _pagination, _progress, _list-group, _breadcrumb, _tables, _badge,
+// _tooltip, _form-check). Those partials are NOT imported by this project —
+// DS web components handle those UI elements.
+//
+// If you later need to fall back to Bootstrap for one of these, do TWO things:
+//   1. Add the matching `@import "bootstrap/scss/<partial>";` to bootstrap.scss
+//   2. Uncomment ONLY the section below that matches it
+//
+// Notes baked into this block:
+//   • rgba()'d primary uses var(--rgb-primary) (emitted from the new
+//     $rgb-tokens map in _colors.scss), not a hardcoded "79, 0, 140".
+//   • grey references use the corrected DS spec values (grey-200 = #e6e9eb).
+// =============================================================================
+
+/*
+
+// ── Buttons (requires bootstrap/scss/buttons) ────────────────────────────────
+$btn-padding-y:        0.5rem            !default;
+$btn-padding-x:        1rem              !default;
+$btn-font-weight:      500               !default;
+$btn-border-radius:    rd.$border-radius    !default;
+$btn-border-radius-sm: rd.$border-radius-sm !default;
+$btn-border-radius-lg: rd.$border-radius-lg !default;
+$btn-focus-width:         3px            !default;
+$btn-focus-color-opacity: 0.25           !default;
+$btn-transition:
+  color 0.2s ease-in-out,
+  background-color 0.2s ease-in-out,
+  border-color 0.2s ease-in-out,
+  box-shadow 0.2s ease-in-out !default;
+
+// ── Inputs (requires bootstrap/scss/forms) ───────────────────────────────────
+$input-padding-y:           0.5rem        !default;
+$input-padding-x:           0.75rem       !default;
+$input-bg:                  c.$white      !default;
+$input-border-color:        c.$grey-200   !default;
+$input-border-radius:       rd.$border-radius    !default;
+$input-border-radius-sm:    rd.$border-radius-sm !default;
+$input-border-radius-lg:    rd.$border-radius-lg !default;
+$input-focus-border-color:  c.$primary    !default;
+// Uses --rgb-primary (emitted by _colors.scss $rgb-tokens map).
+$input-focus-box-shadow:    0 0 0 3px rgba(var(--ds-rgb-primary), 0.20) !default;
+$input-placeholder-color:   c.$dark-grey  !default;
+$input-transition:
+  border-color 0.2s ease-in-out,
+  box-shadow 0.2s ease-in-out !default;
+
+// ── Cards (requires bootstrap/scss/card) ─────────────────────────────────────
+$card-border-radius: rd.$border-radius-lg !default;
+$card-border-color:  c.$grey-200          !default;
+$card-bg:            c.$white             !default;
+$card-box-shadow:    sh.$box-shadow       !default;
+$card-spacer-x:      s.$space-lg          !default;
+$card-spacer-y:      s.$space-lg          !default;
+$card-cap-bg:        transparent          !default;
+
+// ── Badges (requires bootstrap/scss/badge) ───────────────────────────────────
+$badge-padding-y:     0.25rem                !default;
+$badge-padding-x:     0.5rem                 !default;
+$badge-border-radius: rd.$border-radius-sm   !default;
+$badge-font-weight:   500                    !default;
+
+// ── Modal (requires bootstrap/scss/modal) ────────────────────────────────────
+$modal-content-border-radius:    rd.$border-radius-lg !default;
+$modal-content-box-shadow-xs:    sh.$box-shadow-lg    !default;
+$modal-content-box-shadow-sm-up: sh.$box-shadow-lg    !default;
+$modal-backdrop-opacity:         0.5                  !default;
+
+// ── Tooltips (requires bootstrap/scss/tooltip) ───────────────────────────────
+$tooltip-border-radius: rd.$border-radius-sm !default;
+$tooltip-bg:            c.$black             !default;
+$tooltip-color:         c.$white             !default;
+$tooltip-padding-y:     0.25rem              !default;
+$tooltip-padding-x:     0.5rem               !default;
+
+// ── Dropdowns (requires bootstrap/scss/dropdown) ─────────────────────────────
+$dropdown-border-radius:     rd.$border-radius-md !default;
+$dropdown-box-shadow:        sh.$box-shadow       !default;
+$dropdown-link-hover-bg:     c.$light-grey        !default;
+$dropdown-link-active-bg:    c.$primary           !default;
+$dropdown-link-active-color: c.$white             !default;
+
+// ── Alerts (requires bootstrap/scss/alert) ───────────────────────────────────
+$alert-border-radius: rd.$border-radius !default;
+$alert-border-width:  1px               !default;
+
+// ── Navigation (requires bootstrap/scss/nav and/or navbar) ───────────────────
+$nav-link-color:           c.$dark-grey         !default;
+$nav-link-hover-color:     c.$primary           !default;
+$nav-tabs-border-radius:   rd.$border-radius-sm !default;
+$navbar-light-color:        c.$dark-grey !default;
+$navbar-light-active-color: c.$primary   !default;
+$navbar-light-brand-color:  c.$primary   !default;
+
+// ── Tables (requires bootstrap/scss/tables) ──────────────────────────────────
+$table-border-color: c.$grey-200    !default;
+$table-striped-bg:   c.$light-grey  !default;
+// Uses --rgb-primary (no hardcoded "79, 0, 140").
+$table-hover-bg:     rgba(var(--ds-rgb-primary), 0.04) !default;
+
+// ── Pagination (requires bootstrap/scss/pagination) ──────────────────────────
+$pagination-border-radius:        rd.$border-radius-sm !default;
+$pagination-active-bg:            c.$primary       !default;
+$pagination-active-border-color:  c.$primary       !default;
+$pagination-color:                c.$primary       !default;
+$pagination-hover-color:          c.$primary-dark  !default;
+
+// ── Progress (requires bootstrap/scss/progress) ──────────────────────────────
+$progress-border-radius: rd.$border-radius-pill !default;
+$progress-bg:            c.$light-grey          !default;
+$progress-bar-bg:        c.$primary             !default;
+$progress-bar-color:     c.$white               !default;
+
+// ── List group (requires bootstrap/scss/list-group) ──────────────────────────
+$list-group-border-radius:   rd.$border-radius-lg !default;
+$list-group-border-color:    c.$grey-200          !default;
+$list-group-action-color:    c.$dark-grey         !default;
+$list-group-action-active-bg: c.$light-grey       !default;
+
+// ── Form checks / switches (requires bootstrap/scss/forms) ───────────────────
+$form-check-input-checked-bg-color:     c.$primary !default;
+$form-check-input-checked-border-color: c.$primary !default;
+$form-check-input-border-radius:        rd.$border-radius-sm !default;
+$form-switch-checked-bg-color:          c.$primary !default;
+
+// ── Breadcrumb (requires bootstrap/scss/breadcrumb) ──────────────────────────
+$breadcrumb-active-color:   c.$dark-grey !default;
+$breadcrumb-divider-color:  c.$dark-grey !default;
+
+*/

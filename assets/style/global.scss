@@ -1,0 +1,63 @@
+@use "sass:map";
+@use "foundations/colors" as c;
+@use "foundations/spacing" as s;
+@use "foundations/typography" as t;
+@use "foundations/shadows" as sh;
+@use "foundations/radius" as r;
+@use "abstracts/mixins" as mx;
+@use "vendor/bootstrap" as *;
+@use "utilities";
+
+// @use "component";
+
+:root {
+  @include mx.generate-color-tokens(c.$color-tokens);
+  @include mx.generate-radius-tokens(r.$radius);
+  @include mx.generate-shadow-tokens(sh.$shadows);
+  @include mx.generate-blur-tokens(sh.$blurs);
+  @include mx.generate-spacing-tokens(s.$spacing-scale);
+  @include mx.generate-spacing-tokens(s.$spacing-named);
+  @include mx.generate-font-weight-tokens(t.$font-weights);
+  @include mx.generate-type-tokens(t.$type-scale);
+  @include mx.generate-line-height-tokens(t.$line-heights);
+  @include mx.generate-letter-spacing-tokens(t.$letter-spacings);
+
+  --font-family-base: #{t.$font-family-base};
+  --font-family-mono: #{t.$font-family-mono};
+  --gutter-x: #{s.$space-lg};
+  --gutter-y: #{s.$space-md};
+}
+
+body {
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-text-md);
+  line-height: var(--lh-text-md);
+  letter-spacing: var(--ls-text-md);
+  font-weight: var(--font-weight-regular);
+  color: var(--black);
+  background-color: var(--white);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@media (prefers-contrast: high) {
+  :root {
+    --shadow-sm: none;
+    --shadow-md: none;
+    --shadow-lg: none;
+    --blur-sm: 0;
+    --blur-md: 0;
+    --blur-lg: 0;
+  }
+}

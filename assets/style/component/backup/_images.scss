@@ -1,0 +1,72 @@
+img {
+  max-width: 100%;
+}
+
+.img-card {
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &.circled-img {
+    border-radius: 50%;
+  }
+
+  &.rounded-image {
+    border-radius: 17px;
+  }
+
+  &.full {
+    width: 100%;
+    height: auto;
+  }
+
+  &.small {
+    width: 32px;
+    min-width: 32px;
+    height: 32px;
+  }
+
+  &.x-small {
+    width: 24px;
+    min-width: 24px;
+    height: 24px;
+  }
+
+  &.xx-small {
+    width: 19px;
+    min-width: 19px;
+    height: 19px;
+  }
+
+  &.semi {
+    width: 52px;
+    min-width: 52px;
+    height: 52px;
+  }
+
+  &.medium {
+    width: 38px;
+    min-width: 38px;
+    height: 38px;
+  }
+
+  &.large {
+    width: 98px;
+    min-width: 98px;
+    height: 98px;
+  }
+
+  &.table-img {
+    width: 48px;
+    min-width: 48px;
+    height: 48px;
+    border-radius: 5px;
+  }
+
+  img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+  }
+}

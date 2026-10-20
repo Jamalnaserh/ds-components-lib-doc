@@ -1,0 +1,1 @@
+function n(n){const e=n.endsWith("/")?n:`${n}/`;if("undefined"==typeof document||"undefined"==typeof window)return e;try{return new URL(e,function(){if("undefined"==typeof document||"undefined"==typeof window)return"/";const n=document.querySelector("base[href]");return n?.href?n.href:`${window.location.origin}/`}()).href}catch{return e}}export{n}

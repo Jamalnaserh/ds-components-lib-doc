@@ -1,0 +1,71 @@
+.ngx-pagination {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: var(--pagination-justify);
+  gap: 1rem;
+
+  li {
+    min-width: var(--default-size-sm);
+    height: var(--default-size-sm);
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: hidden;
+    color: var(--black);
+    background-color: var(--white);
+    box-shadow: 0 7px 10px rgba(var(--rgb-black), 3%);
+    transition: var(--default-transition);
+
+    &:hover,
+    &.current {
+      @extend .pagination-active;
+    }
+
+    a {
+      cursor: pointer;
+    }
+
+    a,
+    > span,
+    button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      text-decoration: none;
+      color: inherit;
+      background: transparent !important;
+      border: none;
+      padding: 0 0.3rem;
+      border-radius: inherit !important;
+    }
+
+    &.pagination-previous,
+    &.pagination-next {
+      background-color: transparent;
+      box-shadow: none;
+
+      &.disabled {
+        color: var(--dark-gray);
+      }
+
+      ds-icon {
+        [dir="rtl"] & {
+          transform: rotate(180deg);
+        }
+      }
+    }
+  }
+}
+
+.pagination-active {
+  color: var(--white);
+  background-color: var(--purple);
+}

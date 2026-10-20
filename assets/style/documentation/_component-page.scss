@@ -1,0 +1,29 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// documentation/_component-page.scss
+// Minimal layout helpers for the BEM component showcase page (component.pug).
+// The page relies primarily on the shared component stylesheet
+// (build/ds-components.css). Only page-level chrome lives here.
+// ─────────────────────────────────────────────────────────────────────────────
+
+// ── Section spacing ────────────────────────────────────────────────────────
+// Mirrors Bootstrap mt-9 when Bootstrap is not loaded
+.mt-9 {
+  margin-top: 4rem;
+}
+
+// ── Section headings ───────────────────────────────────────────────────────
+// The page uses .fs-xxl.fw-bold on <p> as a section label — keep utility
+// alignment consistent regardless of which utility sheet is loaded.
+.fs-xxl {
+  font-size: 1.5rem !important;
+}
+
+.fw-bold {
+  font-weight: 700 !important;
+}
+
+// ── Bottom spacer ──────────────────────────────────────────────────────────
+// .d-block.h-25.w-100 at the foot of the page
+.h-25 {
+  height: 4rem;
+}

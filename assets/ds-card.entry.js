@@ -1,0 +1,38 @@
+import { r as registerInstance, a as getElement, h, H as Host } from './index-CTScrs23.js';
+
+const dsCardCss = () => `:host{display:block}:host *{box-sizing:border-box}:host .card{display:block;width:100%;min-width:200px;max-width:100%;height:var(--card-height, auto);position:relative;padding:var(--card-padding, 1rem);text-align:var(--card-align, inherit);background-color:var(--card-bg, #fff);box-shadow:var(--card-shadow, none);transition:transform 0.5s, opacity 0.5s, z-index 0.5s;border-radius:var(--card-radius, 12px);overflow:hidden}:host .card__status-border{background-color:var(--status-border-color, #c5cacb);inset:var(--top-position, 0) var(--right-position, auto) var(--bottom-position, auto) var(--left-position, 0);height:var(--status-border-height, 100%);width:var(--status-border-size, 7px);position:var(--status-border-position, absolute);border-radius:0 2px 2px 0}:host .card__status-border.active{--status-border-color:#00c48c}:host .card__status-border.pending{--status-border-color:#ffdc40}:host .card__status-border.blocked,:host .card__status-border.error{--status-border-color:#cf2544}:host .card__status-border.draft,:host .card__status-border.inactive{--status-border-color:#8399af}:host .card__image{width:100%;height:var(--card-image-height, auto);overflow:hidden;border-radius:var(--card-image-radius, 0);margin-bottom:var(--margin-bottom, 1rem)}:host .card__image:empty{display:none}:host .card__image img{width:100%;height:100%;object-fit:cover}:host .card__header{color:var(--card-header-fc, #1d252d);font-size:var(--font-size, 1rem);font-weight:bold;margin:0 0 0.5rem}:host .card__body{color:var(--card-body-fc, #8399af);font-size:var(--font-size, 1rem);line-height:1.5}:host .card__footer{margin-top:0.75rem;padding-top:0.75rem;border-top:1px solid var(--card-footer-border, #e8e8e8);font-size:var(--font-size, 0.875rem)}`;
+
+const DsCard = class {
+    constructor(hostRef) {
+        registerInstance(this, hostRef);
+    }
+    get hostElement() { return getElement(this); }
+    /** Left status strip + `card--status-<value>` on the root (e.g. `active`, `pending`). HTML: `card-status`. */
+    cardStatus;
+    /** Derived in `componentWillLoad` from presence of `slot="header"`. */
+    hasHeaderSlot;
+    /** Derived from `slot="image"`. */
+    hasImageSlot;
+    /** Derived from `slot="footer"`. */
+    hasFooterSlot;
+    componentWillLoad() {
+        this.hasHeaderSlot = !!this.hostElement.querySelector('[slot="header"]');
+        this.hasImageSlot = !!this.hostElement.querySelector('[slot="image"]');
+        this.hasFooterSlot = !!this.hostElement.querySelector('[slot="footer"]');
+    }
+    render() {
+        const classMap = this.getCssClassMap();
+        return (h(Host, { key: '83aa2071b93f657b73e5b03e650994bdff550408' }, h("article", { key: '8436ed9193fdfcd2b50c98990d1f4e03d3b62568', part: "base", class: { card: true, ...classMap } }, this.cardStatus && (h("span", { key: 'cb2f1c11e083fdf16691a6c1e3cedc45a09c87c3', part: "status", class: `card__status-border ${this.cardStatus}` })), this.hasImageSlot && (h("figure", { key: '85e31c42c0ecf5af1d7ae491b6a540c4da4d561c', part: "image", class: "card__image" }, h("slot", { key: '51f2ca3829ee6501f89dd0981f1d51a86b966823', name: "image" }))), this.hasHeaderSlot && (h("header", { key: '606bd7a52ca6133a36bf6ff74855db54f8b85b43', part: "header", class: "card__header" }, h("slot", { key: '72c5d6af544e4fc4eaf495603abefba3cf3b49b9', name: "header" }))), h("div", { key: '9ce1dac15ec8aba6b65bf75306707b1afdc7179b', part: "body", class: "card__body" }, h("slot", { key: '8030093cb454da432d22d275e22a617286f85dad' })), this.hasFooterSlot && (h("footer", { key: 'd54bcc3750e6a723ab5fc1d7ecd823ab42b779c2', part: "footer", class: "card__footer" }, h("slot", { key: '62f11baa4887714ff539c0f35010a962a53114d1', name: "footer" }))))));
+    }
+    getCssClassMap() {
+        return {
+            [`card--status-${this.cardStatus}`]: !!this.cardStatus,
+            [`card--header`]: this.hasHeaderSlot,
+            [`card--image`]: this.hasImageSlot,
+            [`card--footer`]: this.hasFooterSlot,
+        };
+    }
+};
+DsCard.style = dsCardCss();
+
+export { DsCard as ds_card };

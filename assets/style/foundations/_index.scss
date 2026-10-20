@@ -1,0 +1,16 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// src/assets/style/documentation/_index.scss
+// Barrel that forwards every documentation-page stylesheet.
+// Import this from your global ds-doc entry point.
+// ─────────────────────────────────────────────────────────────────────────────
+
+@forward "colors-page";
+@forward "typography-page";
+@forward "icons-page";
+@forward "spacing-page";
+@forward "shadows-page";
+@forward "radius-page";
+@forward "grid-page";
+@forward "dashboard-page";
+@forward "components-page";
+@forward "component-page";

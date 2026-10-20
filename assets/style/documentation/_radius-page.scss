@@ -1,0 +1,80 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// documentation/_radius-page.scss
+// Styles exclusive to the Border Radius foundations page.
+// ─────────────────────────────────────────────────────────────────────────────
+
+// ── Table ──────────────────────────────────────────────────────────────────
+.radius-table {
+  width: 100%;
+  max-width: 42.5rem;
+  border: 1px solid var(--ds-border, #ebebeb);
+  border-radius: 0.75rem;
+  overflow: hidden;
+  border-collapse: collapse;
+
+  thead th {
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--ds-dark-grey, #8399af);
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--ds-border, #ebebeb);
+    text-align: start;
+    background: #fff;
+  }
+
+  tbody {
+    tr {
+      border-bottom: 1px solid var(--ds-border, #ebebeb);
+
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+
+    td {
+      padding: 1.25rem 1.5rem;
+      font-size: 0.875rem;
+      color: var(--ds-black, #1d252d);
+      vertical-align: middle;
+    }
+  }
+}
+
+// ── Column widths ──────────────────────────────────────────────────────────
+.col-name {
+  font-weight: 400;
+  width: 10rem;
+}
+
+.col-token {
+  width: 14rem;
+}
+
+.col-px {
+  color: var(--ds-dark-grey, #8399af);
+  width: 8rem;
+}
+
+.col-preview {
+  text-align: end;
+  padding-inline-end: 1.75rem;
+}
+
+// ── Preview box ────────────────────────────────────────────────────────────
+.preview-box {
+  display: inline-block;
+  width: 3.5rem;
+  height: 3.5rem;
+  background: #ede6f4;
+  border: 1.5px solid #d3b8e8;
+}
+
+// ── Inline code ────────────────────────────────────────────────────────────
+.ds-code {
+  font-family: "Courier New", monospace;
+  font-size: 0.75rem;
+  background: #f3f3f1;
+  padding: 0.125rem 0.375rem;
+  border-radius: 0.25rem;
+  color: #4f008c;
+}
