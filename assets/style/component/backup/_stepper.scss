@@ -1,0 +1,158 @@
+.primary-stepper, .mat-stepper-horizontal{
+  --steps-bc: var(--white);
+  --steps-radius: 0;
+  --steps-margin: 0 auto;
+  --steps-padding: 1rem;
+  --steps-width: 100%;
+  --steps-position: sticky;
+  --steps-sticky-position: 0;
+  --steps-justify: space-between;
+  --steps-direction: row;
+  --steps-container-bc: var(--white);
+  --steps-container-padding: 1rem 0;
+  --steps-container-margin: 0;
+  --steps-label-fs: .875rem;
+  --steps-label-fw: var(--font-regular);
+  --steps-label-fw-active: var(--font-medium);
+  --steps-icon-bc: var(--light-gray);
+  --steps-icon-bc-active: rgba(var(--rgb-purple), .1);
+  --steps-icon-bc-done: rgba(var(--rgb-green), .1);
+  --steps-icon-fs: 1.2rem;
+  --steps-icon-fw: var(--font-medium);
+  --steps-icon-fc: var(--black);
+  --steps-icon-fc-active: var(--purple);
+  --steps-icon-fc-done: var(--green);
+  --steps-icon-border-w: 1px;
+  --steps-icon-border-style: solid;
+  --steps-icon-border-color: transparent;
+  --steps-icon-border-color-active: transparent;
+  --steps-icon-border-color-done: transparent;
+  --steps-icon-size: var(--default-size);
+  --steps-icon-radius: 6px;
+  --steps-icon-gap: 1rem;
+  --steps-line-content: none;
+  --steps-line: 1px dashed var(--dark-gray);
+  --steps-line-active: 1px solid var(--green);
+  --steps-line-done: 0;
+  --steps-line-width: 80px;
+  --steps-line-top: 0;
+  --steps-line-margin: 0;
+
+  &.has-line {
+    --steps-line-content: '';
+  }
+
+  &.r-sm-header{
+    @media (width <= 576px){
+      --steps-display: none;
+    }
+  }
+
+
+
+  .mat-horizontal-stepper-header-container {
+    margin: var(--steps-margin);
+    width: var(--steps-width);
+    position: var(--steps-position);
+    top: var(--steps-sticky-position);
+    background-color:var(--steps-bc);
+    padding: var(--steps-padding);
+    gap: var(--steps-icon-gap);
+    z-index: 2;
+    display: var(--steps-display, flex);
+    justify-content: var(--steps-justify);
+    flex-direction: var(--steps-direction);
+    border-radius: var(--steps-radius);
+
+    .mat-stepper-horizontal-line, .mat-ripple{
+      display: none !important;
+    }
+
+    .mat-horizontal-stepper-header {
+      position: relative;
+      height: auto;
+      padding: 0;
+      gap: var(--steps-icon-gap);
+      background-color: transparent;
+
+      &:last-child{
+        .mat-step-label{
+          &::after{
+            content: none;
+          }
+        }
+
+      }
+
+      .mat-step-icon,
+      .mat-step-icon-state-number {
+        background-color: var(--steps-icon-bc);
+        color: var(--steps-icon-fc);
+        font-size: var(--steps-icon-fs);
+        font-weight: var(--steps-icon-fw);
+        border-width: var(--steps-icon-border-w);
+        border-style: var(--steps-icon-border-style);
+        border-color: var(--steps-icon-border-color);
+        border-radius: var(--steps-icon-radius);
+        width: var(--steps-icon-size);
+        height: var(--steps-icon-size);
+        transition: var(--default-transition);
+        margin: 0;
+
+        &.mat-step-icon-state-edit {
+          --steps-icon-fc: var(--steps-icon-fc-done);
+          --steps-icon-bc:  var(--steps-icon-bc-done);
+          --steps-icon-border-color: var(--steps-icon-border-color-done);
+        }
+
+        &.mat-step-icon-selected{
+          --steps-icon-fc: var(--steps-icon-fc-active);
+          --steps-icon-bc: var(--steps-icon-bc-active);
+          --steps-icon-border-color: var(--steps-icon-border-color-active);
+        }
+
+        .mat-icon {
+          font-size: var(--steps-icon-fs);
+          height: var(--steps-icon-fs);
+          width: var(--steps-icon-fs);
+        }
+      }
+
+      .mat-step-label {
+        font-size: var(--steps-label-fs);
+        color: var(--steps-label-fc);
+        font-weight: var(--steps-label-fw);
+        transition: var(--default-transition);
+        display: flex;
+        align-items: center;
+        gap: var(--steps-icon-gap);
+
+        &::after{
+          content: var(--steps-line-content);
+          border: var(--steps-line);
+          margin: var(--steps-line-margin);
+          min-width: var(--steps-line-width);
+          transition: var(--defult-transition);
+        }
+
+
+        &.mat-step-label-active, &.mat-step-label-selected {
+          --steps-label-fw: var(--steps-label-fw-active)
+        }
+
+
+        &.mat-step-label-active {
+          --steps-line: var(--steps-line-active);
+        }
+
+
+      }
+    }
+  }
+
+  .mat-horizontal-content-container{
+    padding: var(--steps-container-padding);
+    margin: var(--steps-container-margin);
+    background: var(--steps-container-bc);
+  }
+}

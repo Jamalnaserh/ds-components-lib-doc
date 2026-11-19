@@ -1,0 +1,84 @@
+// uncomment the below to override custom webcomponents by change the $root-colors
+
+@mixin generate_btn($colors) {
+  // Colors, RGB Colors
+  @each $color, $value in $colors {
+    ds-button[color=#{"" +$color}] {
+      &::part(base) {
+        outline: none;
+      }
+      @if $color == transparent or $color == white {
+        --btn-bg-color: transparent;
+        --btn-color: var(--coral);
+        --btn-border-color: white;
+        --btn-overlay-color: white;
+
+        &[shape="outline"] {
+          &::part(base) {
+            --btn-bg-color: transparent;
+            --btn-color: white;
+
+            &:hover {
+              // --btn-color: rgb(var(--btn-bg-color));
+              color: var(--coral);
+            }
+          }
+        }
+
+        &[shape="flat"] {
+          &::part(base) {
+            background-color: transparent;
+
+            &:hover {
+              --btn-border-color: var(--coral);
+
+              color: var(--coral);
+            }
+          }
+        }
+
+        &[shape="text"] {
+          &::part(base) {
+            &:hover {
+              // --btn-color: rgb(var(--btn-bg-color));
+              color: var(--coral) !important;
+            }
+          }
+        }
+      } @else {
+        // --btn-color: rgb(var(--ds-#{$color}));
+        --btn-bg-color: transparent;
+        --btn-border-color: var(--#{$color});
+        --btn-overlay-color: var(--#{$color});
+
+        &[shape="outline"] {
+          &::part(base) {
+            --btn-color: var(--#{$color});
+          }
+        }
+
+        &[shape="text"] {
+          &::part(base) {
+            color: var(--#{$color});
+
+            &:hover {
+              opacity: 0.8;
+            }
+          }
+        }
+      }
+    }
+
+    ds-button[disabled],
+    ds-button[loading] {
+      &::part(base) {
+        // color: var(--gray) !important;
+        // --btn-bg-color: var(--light-gray);
+        // --btn-border-color: var(--light-gray);
+        // --btn-overlay-color: var(--light-gray);
+      }
+    }
+  }
+}
+
+@include generate_btn($root-colors);

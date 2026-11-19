@@ -1,0 +1,94 @@
+@use "foundations/colors" as c;
+@use "foundations/typography" as t;
+@use "foundations/spacing" as s;
+@use "foundations/radius" as rd;
+@use "foundations/shadows" as sh;
+@use "foundations/grid" as g;
+@use "abstracts/mixins" as mx;
+
+$auto-values: (
+  "auto": auto,
+  "unset": unset,
+  "initial": initial,
+  "inherit": inherit,
+);
+
+@include mx.generate-color-utilities(c.$color-tokens);
+@include mx.generate-radius-utilities(rd.$radius);
+@include mx.generate-shadow-utilities(sh.$shadows);
+@include mx.generate-blur-utilities(sh.$blurs);
+@include mx.generate-font-weight-utilities(t.$font-weights);
+@include mx.generate-type-utilities(t.$type-scale);
+@include mx.generate-numeric-fs-utilities(13, 90);
+@include mx.generate-spacing-utilities(s.$spacing-scale);
+@include mx.generate-line-height-utilities(t.$line-heights);
+@include mx.generate-letter-spacing-utilities(t.$letter-spacings);
+
+.fw-regular {
+  font-weight: var(--font-weight-regular);
+}
+
+.fw-medium {
+  font-weight: var(--font-weight-medium);
+}
+
+.fw-semibold {
+  font-weight: var(--font-weight-semibold);
+}
+
+.fw-bold {
+  font-weight: var(--font-weight-bold);
+}
+
+.fw-extrabold {
+  font-weight: var(--font-weight-extrabold);
+}
+
+.text-ellipsis {
+  @include mx.truncate;
+}
+
+.visually-hidden,
+.sr-only {
+  @include mx.visually-hidden;
+}
+
+[dir="rtl"] {
+  .flip-rtl {
+    transform: scaleX(-1);
+  }
+}
+
+@supports not (backdrop-filter: blur(1px)) {
+  .backdrop-blur-fallback {
+    background-color: rgb(255 255 255 / 85%);
+  }
+
+  .backdrop-blur-dark-fallback {
+    background-color: rgb(0 0 0 / 85%);
+  }
+}
+
+@supports (backdrop-filter: blur(1px)) {
+  .backdrop-blur-supported {
+    backdrop-filter: blur(var(--blur-sm));
+    background-color: rgb(255 255 255 / 60%);
+  }
+
+  .backdrop-blur-dark-supported {
+    backdrop-filter: blur(var(--blur-sm));
+    background-color: rgb(0 0 0 / 60%);
+  }
+}
+
+@media print {
+  .shadow-animated,
+  .blur-animated,
+  .backdrop-blur-fallback,
+  .backdrop-blur-dark-fallback {
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    filter: none !important;
+    background-color: transparent !important;
+  }
+}

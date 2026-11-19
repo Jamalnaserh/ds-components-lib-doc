@@ -1,0 +1,31 @@
+// Grid gutter default.
+
+// ─────────────────────────────────────────────────────────────────────────────
+// BOOTSTRAP GRID OVERRIDES
+// ─────────────────────────────────────────────────────────────────────────────
+
+// Gutter — aligns to DS Spacing-24 (1.5 rem)
+$grid-gutter-width: 1.5rem !default;
+
+// Column count (Bootstrap default is 12 — keep unless DS specifies otherwise)
+$grid-columns: 12 !default;
+
+// Breakpoints — matches Bootstrap 5 defaults; override values here if the
+// DS specifies different viewport sizes.
+$grid-breakpoints: (
+  xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px,
+  xxl: 1400px,
+) !default;
+
+// Container max-widths — centred page containers per breakpoint
+$container-max-widths: (
+  sm: 540px,
+  md: 720px,
+  lg: 960px,
+  xl: 1140px,
+  xxl: 1320px,
+) !default;

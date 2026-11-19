@@ -1,0 +1,9 @@
+<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+<path d="M17.4268 3.01074C18.4352 3.1132 19.2227 3.96449 19.2227 5V12.4629H18.2227V5C18.2227 4.44786 17.7747 4.00023 17.2227 4H5C4.44771 4 4 4.44772 4 5V20.0244H11.1113V21.0244H3V5C3 3.96435 3.78722 3.113 4.7959 3.01074L5 3H17.2227L17.4268 3.01074Z" fill="currentColor"/>
+<path d="M13.3368 21.9531L21.2499 14.04" stroke="currentColor" fill="none"/>
+<path d="M21.2499 21.9531L13.3368 14.04" stroke="currentColor" fill="none"/>
+<line x1="10.6604" y1="13.8677" x2="7.51058" y2="13.8677" stroke="currentColor"/>
+<line x1="10.6604" y1="17.0186" x2="7.51058" y2="17.0186" stroke="currentColor"/>
+<line x1="14.7159" y1="10.26" x2="7.50606" y2="10.26" stroke="currentColor"/>
+<line x1="14.7159" y1="6.65601" x2="7.50606" y2="6.65601" stroke="currentColor"/>
+</svg>

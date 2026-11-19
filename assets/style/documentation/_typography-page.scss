@@ -1,0 +1,123 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// documentation/_typography-page.scss
+// Styles exclusive to the Typography foundations page.
+// @font-face declarations remain inline in typography.pug (page-specific, tiny).
+// ─────────────────────────────────────────────────────────────────────────────
+
+// ── Typeface specimen ──────────────────────────────────────────────────────
+.specimen {
+  margin-bottom: 2.5rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--doc-border);
+}
+
+.specimen__heading {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.specimen__ag {
+  font-size: 4.5rem;
+  font-weight: 400;
+  line-height: 1;
+  color: var(--doc-text);
+  font-family: "STC Forward", sans-serif;
+}
+
+.specimen__name {
+  font-size: 1.125rem;
+  font-weight: 400;
+  color: var(--doc-text-secondary);
+}
+
+.specimen__chars {
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--doc-text);
+  line-height: 1.9;
+  letter-spacing: 0.03em;
+}
+
+// ── Type scale table ───────────────────────────────────────────────────────
+.type-scale {
+  border: 1px solid var(--doc-border);
+  border-radius: var(--radius-xl, 16px);
+  overflow: hidden;
+  background: var(--doc-surface);
+  padding: 2rem;
+}
+
+.scale-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: auto 1fr;
+  gap: 0;
+  border-bottom: 1px solid var(--doc-border);
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.scale-meta {
+  grid-column: 1 / -1;
+  grid-row: 1;
+  justify-self: end;
+  padding: 0.75rem 1rem 0;
+  font-size: 0.625rem;
+  color: var(--doc-text-secondary);
+  font-weight: 400;
+  white-space: nowrap;
+  text-align: right;
+  line-height: 1.5;
+
+  @media (width <= 900px) {
+    justify-self: start;
+    text-align: start;
+  }
+}
+
+.scale-group-label {
+  font-size: 0.6875rem;
+  color: var(--doc-text-secondary);
+  font-weight: var(--font-weight-semibold, 600);
+  padding: 0.875rem 1rem 0.5rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  grid-column: 1 / -1;
+  background: var(--doc-surface-header);
+  border-bottom: 1px solid var(--doc-border);
+}
+
+.scale-cell {
+  grid-row: 2;
+  padding: 1.25rem 1rem 1.5rem;
+
+  &:not(:last-child) {
+    border-inline-end: 1px solid var(--doc-border);
+  }
+}
+
+.scale-cell__sample {
+  color: var(--doc-text);
+  line-height: 1.25;
+  font-family: "STC Forward", sans-serif;
+}
+
+@media (width <= 900px) {
+  .scale-row {
+    grid-template-columns: 1fr;
+  }
+
+  .scale-cell {
+    border-inline-end: 0;
+    border-bottom: 1px solid var(--doc-border);
+    padding: 1rem 1rem 1.25rem;
+  }
+
+  .scale-row .scale-cell:last-child {
+    border-bottom: 0;
+  }
+}

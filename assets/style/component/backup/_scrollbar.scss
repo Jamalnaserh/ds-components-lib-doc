@@ -1,0 +1,31 @@
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #ececec;
+  box-shadow: none;
+  border: 0;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgb(0 0 0 / 12%);
+  border-radius: 5px;
+  box-shadow: none;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  box-shadow: none;
+}
+
+::-webkit-scrollbar-thumb:active {
+  background: #888;
+  box-shadow: none;
+}
+
+// firefox
+* {
+  scrollbar-color: #a4a4a4 #fff;
+  scrollbar-width: thin;
+}

@@ -1,0 +1,452 @@
+@use "sass:color";
+@use "sass:list";
+@use "sass:map";
+@use "sass:math";
+@use "sass:string";
+
+@use "../foundations/colors" as c;
+@use "../foundations/spacing" as s;
+@use "../foundations/shadows" as sh;
+@use "../foundations/radius" as r;
+@use "../foundations/grid" as g;
+@use "../foundations/typography" as t;
+
+// =============================================================================
+// TOKEN ACCESSOR FUNCTIONS
+// Prefer these over var(--foo) in component SCSS so the compiler can
+// validate that the key exists at build time.
+// =============================================================================
+
+/// Returns a colour from the DS $color-tokens map.
+/// Usage: color: color-token('primary');
+@function color-token($key) {
+  @if not map.has-key(c.$color-tokens, $key) {
+    @warn 'color-token(): unknown key "#{$key}"';
+  }
+  @return map.get(c.$color-tokens, $key);
+}
+
+/// Returns a spacing value from $spacing-scale.
+/// Usage: padding: spacing-token('24');
+@function spacing-token($key) {
+  @if not map.has-key(s.$spacing-scale, $key) {
+    @warn 'spacing-token(): unknown key "#{$key}"';
+  }
+  @return map.get(s.$spacing-scale, $key);
+}
+
+/// Returns a shadow value from $shadows map.
+/// Usage: box-shadow: shadow-token('md');
+@function shadow-token($key) {
+  @if not map.has-key(sh.$shadows, $key) {
+    @warn 'shadow-token(): unknown key "#{$key}"';
+  }
+  @return map.get(sh.$shadows, $key);
+}
+
+/// Returns a blur value from $blurs map.
+@function blur-token($key) {
+  @if not map.has-key(sh.$blurs, $key) {
+    @warn 'blur-token(): unknown key "#{$key}"';
+  }
+  @return map.get(sh.$blurs, $key);
+}
+
+/// Returns a radius value from $radius map.
+@function radius-token($key) {
+  @if not map.has-key(r.$radius, $key) {
+    @warn 'radius-token(): unknown key "#{$key}"';
+  }
+  @return map.get(r.$radius, $key);
+}
+
+/// Converts px integer to rem string (base 16).
+@function px-to-rem($px) {
+  @return math.div($px, 16) * 1rem;
+}
+
+// =============================================================================
+// CSS CUSTOM PROPERTY GENERATORS
+// Call these once inside :root {} in global.scss.
+// =============================================================================
+
+/// Emits --{name}: rgb(r, g, b) and --rgb-{name}: r, g, b for every entry in
+/// the DS $color-tokens map.
+@mixin generate-color-tokens($map) {
+  @each $name, $value in $map {
+    $r: color.channel($value, "red", $space: rgb);
+    $g: color.channel($value, "green", $space: rgb);
+    $b: color.channel($value, "blue", $space: rgb);
+
+    --#{$name}: #{$value};
+    --rgb-#{$name}: #{$r}, #{$g}, #{$b};
+  }
+}
+
+/// Emits --radius-{key}: {value} for every entry in $radius.
+@mixin generate-radius-tokens($map: r.$radius) {
+  @each $key, $value in $map {
+    --radius-#{$key}: #{$value};
+  }
+}
+
+/// Emits --shadow-{key}: {value} for every entry in $shadows.
+@mixin generate-shadow-tokens($map: sh.$shadows) {
+  @each $key, $value in $map {
+    --shadow-#{$key}: #{$value};
+  }
+}
+
+/// Emits --blur-{key}: {value} for every entry in $blurs.
+@mixin generate-blur-tokens($map: sh.$blurs) {
+  @each $key, $value in $map {
+    --blur-#{$key}: #{$value};
+  }
+}
+
+/// Emits --spacing-{key}: {value} for every map entry (numeric scale and/or semantic names).
+@mixin generate-spacing-tokens($map: s.$spacing-scale) {
+  @each $key, $value in $map {
+    --spacing-#{$key}: #{$value};
+  }
+}
+
+/// Emits --font-weight-{key}: {value} for every entry in $font-weights.
+@mixin generate-font-weight-tokens($map: t.$font-weights) {
+  @each $key, $value in $map {
+    --font-weight-#{$key}: #{$value};
+    --fw-#{$key}: #{$value};
+  }
+}
+
+/// Emits --font-size-{key}, --lh-{key}, --ls-{key}, --font-size-{key}-mob
+/// for every entry in $type-scale.
+@mixin generate-type-tokens($map: t.$type-scale) {
+  @each $key, $config in $map {
+    --font-size-#{$key}: #{map.get($config, "size")};
+    --fs-#{$key}: #{map.get($config, "size")};
+    --lh-#{$key}: #{map.get($config, "lh")};
+    --ls-#{$key}: #{map.get($config, "ls")};
+    @if map.has-key($config, "mob") {
+      --font-size-#{$key}-mob: #{map.get($config, "mob")};
+      --fs-#{$key}-mob: #{map.get($config, "mob")};
+    }
+  }
+}
+
+/// Emits --line-height-{key} for every entry in $line-heights.
+@mixin generate-line-height-tokens($map: t.$line-heights) {
+  @each $key, $value in $map {
+    --line-height-#{$key}: #{$value};
+  }
+}
+
+/// Emits --letter-spacing-{key} for every entry in $letter-spacings.
+@mixin generate-letter-spacing-tokens($map: t.$letter-spacings) {
+  @each $key, $value in $map {
+    --letter-spacing-#{$key}: #{$value};
+  }
+}
+
+// =============================================================================
+// UTILITY CLASS GENERATORS
+// Call these at root level (not inside :root {}) in global.scss.
+// =============================================================================
+
+/// .bc-{name} and .fc-{name} colour utility classes.
+@mixin generate-color-utilities($map: c.$color-tokens) {
+  @each $name, $value in $map {
+    .bc-#{$name} {
+      background-color: var(--#{$name});
+    }
+    .fc-#{$name} {
+      color: var(--#{$name});
+    }
+  }
+}
+
+/// .rounded-{key} utility classes from the DS radius scale.
+@mixin generate-radius-utilities($map: r.$radius) {
+  @each $key, $value in $map {
+    .rounded-#{$key} {
+      border-radius: var(--radius-#{$key});
+    }
+  }
+}
+
+/// .shadow-{key} utility classes (and :hover / :focus variants).
+@mixin generate-shadow-utilities($map: sh.$shadows) {
+  @each $key, $value in $map {
+    .shadow-#{$key} {
+      box-shadow: var(--shadow-#{$key});
+    }
+    .shadow-#{$key}-hover:hover {
+      box-shadow: var(--shadow-#{$key});
+    }
+  }
+}
+
+/// .blur-{key} and .backdrop-blur-{key} filter utilities.
+/// FIX: previously used #{blur(var(…))} which outputs invalid CSS.
+///      Correct output: filter: blur(var(--blur-{key}));
+@mixin generate-blur-utilities($map: sh.$blurs) {
+  @each $key, $value in $map {
+    .blur-#{$key} {
+      filter: blur(var(--blur-#{$key}));
+    }
+    .backdrop-blur-#{$key} {
+      backdrop-filter: blur(var(--blur-#{$key}));
+    }
+    .blur-#{$key}-hover:hover {
+      filter: blur(var(--blur-#{$key}));
+    }
+  }
+}
+
+/// .fw-{key} font-weight utility classes.
+@mixin generate-font-weight-utilities($map: t.$font-weights) {
+  @each $key, $value in $map {
+    .fw-#{$key} {
+      font-weight: var(--font-weight-#{$key});
+    }
+  }
+}
+
+/// .fs-{key} and .typo-{key} type scale utility classes.
+@mixin generate-type-utilities($map: t.$type-scale) {
+  @each $key, $config in $map {
+    .fs-#{$key} {
+      font-size: var(--font-size-#{$key});
+      line-height: var(--lh-#{$key});
+      letter-spacing: var(--ls-#{$key});
+      @media (width <= 768px) {
+        font-size: var(--font-size-#{$key}-mob);
+      }
+    }
+
+    $is-display: string.index($key, "display");
+    .typo-#{$key} {
+      font-size: var(--font-size-#{$key});
+      line-height: var(--lh-#{$key});
+      letter-spacing: var(--ls-#{$key});
+      @if $is-display {
+        font-weight: var(--font-weight-bold);
+      } @else {
+        font-weight: var(--font-weight-regular);
+      }
+      @media (width <= 768px) {
+        font-size: var(--font-size-#{$key}-mob);
+      }
+    }
+  }
+}
+
+/// Numeric pixel font-size utilities: .fs-{n} for n = 13–90.
+/// Only generated when Bootstrap's own .fs-* scale doesn't cover the value.
+@mixin generate-numeric-fs-utilities($min: 13, $max: 90) {
+  @for $i from $min through $max {
+    $val: #{$i}px;
+    @if $i > 12 {
+      $val: math.div($i, 16) * 1rem;
+    }
+    .fs-#{$i} {
+      font-size: $val;
+    }
+    .fs-#{$i}-imp {
+      font-size: $val !important;
+    }
+    @media (width <= 768px) {
+      .fs-md-#{$i} {
+        font-size: $val !important;
+      }
+    }
+  }
+}
+
+/// .m-{key}, .p-{key}, .gap-{key} etc. from $spacing-scale.
+/// NOTE: Bootstrap 5 already generates .m-0–.m-5 and .m-{xs,sm,md,lg,xl}.
+///       These use DS numeric keys (.m-16, .p-24 …) that BS does not cover.
+@mixin generate-spacing-utilities($map: s.$spacing-scale) {
+  @each $key, $value in $map {
+    .m-#{$key} {
+      margin: var(--spacing-#{$key});
+    }
+    .mt-#{$key} {
+      margin-top: var(--spacing-#{$key});
+    }
+    .me-#{$key} {
+      margin-inline-end: var(--spacing-#{$key});
+    }
+    .mb-#{$key} {
+      margin-bottom: var(--spacing-#{$key});
+    }
+    .ms-#{$key} {
+      margin-inline-start: var(--spacing-#{$key});
+    }
+    .mx-#{$key} {
+      margin-inline: var(--spacing-#{$key});
+    }
+    .my-#{$key} {
+      margin-block: var(--spacing-#{$key});
+    }
+
+    .p-#{$key} {
+      padding: var(--spacing-#{$key});
+    }
+    .pt-#{$key} {
+      padding-top: var(--spacing-#{$key});
+    }
+    .pe-#{$key} {
+      padding-inline-end: var(--spacing-#{$key});
+    }
+    .pb-#{$key} {
+      padding-bottom: var(--spacing-#{$key});
+    }
+    .ps-#{$key} {
+      padding-inline-start: var(--spacing-#{$key});
+    }
+    .px-#{$key} {
+      padding-inline: var(--spacing-#{$key});
+    }
+    .py-#{$key} {
+      padding-block: var(--spacing-#{$key});
+    }
+
+    .gap-#{$key} {
+      gap: var(--spacing-#{$key});
+    }
+    .gap-x-#{$key} {
+      column-gap: var(--spacing-#{$key});
+    }
+    .gap-y-#{$key} {
+      row-gap: var(--spacing-#{$key});
+    }
+  }
+}
+
+/// Line-height utility classes: .lh-{key}
+@mixin generate-line-height-utilities($map: t.$line-heights) {
+  @each $key, $value in $map {
+    .lh-#{$key} {
+      line-height: var(--line-height-#{$key});
+    }
+  }
+}
+
+/// Letter-spacing utility classes: .ls-{key}
+@mixin generate-letter-spacing-utilities($map: t.$letter-spacings) {
+  @each $key, $value in $map {
+    .ls-#{$key} {
+      letter-spacing: var(--letter-spacing-#{$key});
+    }
+  }
+}
+
+// =============================================================================
+// SEMANTIC / COMPONENT MIXINS
+// =============================================================================
+
+/// Consistent focus ring using the DS focus shadow token.
+/// Usage: &:focus-visible { @include focus-ring(); }
+@mixin focus-ring($color: color-token("primary"), $width: 3px, $offset: 2px) {
+  outline: $width solid $color;
+  outline-offset: $offset;
+}
+
+/// Single-line text truncation with ellipsis.
+@mixin truncate() {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/// Visually hidden but accessible to screen readers (replaces sr-only pattern).
+@mixin visually-hidden() {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/// Consistent transition with prefers-reduced-motion support.
+/// Usage: @include ds-transition(transform, box-shadow);
+@mixin ds-transition($properties...) {
+  $duration: 0.2s;
+  $easing: ease-in-out;
+  $result: ();
+  @each $prop in $properties {
+    $result: list.append($result, $prop $duration $easing, comma);
+  }
+
+  transition: $result;
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+}
+
+/// Glassmorphism helper.
+@mixin glass($blur-key: "md", $bg-opacity: 0.1) {
+  background-color: rgba(255, 255, 255, $bg-opacity);
+  backdrop-filter: blur(blur-token($blur-key));
+  border: 1px solid rgb(255 255 255 / 20%);
+  @supports not (backdrop-filter: blur(1px)) {
+    background-color: rgba(255, 255, 255, max($bg-opacity, 0.85));
+  }
+}
+
+/// RTL-aware text-align shortcut.
+/// .text-start / .text-end are Bootstrap 5 built-ins; use logical props elsewhere.
+@mixin text-align-inline-start() {
+  text-align: start;
+}
+@mixin text-align-inline-end() {
+  text-align: end;
+}
+
+/// Responsive breakpoint helper (wraps $grid-breakpoints).
+/// Usage: @include bp-up(md) { … }
+@mixin bp-up($name) {
+  $min: map.get(g.$grid-breakpoints, $name);
+  @if $min != 0 {
+    @media (min-width: #{$min}) {
+      @content;
+    }
+  } @else {
+    @content;
+  }
+}
+
+/// Responsive breakpoint helper — max-width (down from breakpoint).
+@mixin bp-down($name) {
+  $max: map.get(g.$grid-breakpoints, $name);
+  @media (width <= calc(#{$max} - 0.02px)) {
+    @content;
+  }
+}
+
+/// DS Typography shorthand mixins.
+@mixin display-text($size: "lg") {
+  font-size: var(--font-size-display-#{$size});
+  line-height: var(--lh-display-#{$size});
+  letter-spacing: var(--ls-display-#{$size});
+  font-weight: var(--font-weight-bold);
+  @media (width <= 768px) {
+    font-size: var(--font-size-display-#{$size}-mob);
+  }
+}
+
+@mixin body-text($size: "md") {
+  font-size: var(--font-size-text-#{$size});
+  line-height: var(--lh-text-#{$size});
+  letter-spacing: var(--ls-text-#{$size});
+  font-weight: var(--font-weight-regular);
+  @media (width <= 768px) {
+    font-size: var(--font-size-text-#{$size}-mob);
+  }
+}
+

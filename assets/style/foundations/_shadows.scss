@@ -1,0 +1,45 @@
+// Shadow and blur tokens.
+@use "colors" as c;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// SHADOW SCALE
+// ─────────────────────────────────────────────────────────────────────────────
+$shadows: (
+  "none": none,
+  "sm": 0 1px 2px rgb(0 0 0 / 4%),
+  // Small Shadow
+  "md": 0 4px 8px rgb(0 0 0 / 6%),
+  // Medium Shadow
+  "lg": 0 8px 12px rgb(0 0 0 / 8%),
+  // Large Shadow — matches DS card
+  "xl": 0 20px 24px rgb(0 0 0 / 8%),
+  "xxl": 0 32px 56px rgb(0 0 0 / 12%),
+  // Named semantics
+  "elevated": 0 4px 16px rgb(0 0 0 / 6%),
+  "floating": 0 12px 32px rgb(0 0 0 / 10%),
+  "inset-sm": inset 0 1px 2px rgb(0 0 0 / 8%),
+  "inset-md": inset 0 2px 4px rgb(0 0 0 / 8%),
+  "inset-lg": inset 0 4px 8px rgb(0 0 0 / 8%),
+  // Focus rings — colour-keyed so a11y tooling can identify them
+  "focus": 0 0 0 3px rgb(79 0 140 / 25%),
+  // primary / purple
+  "focus-danger": 0 0 0 3px rgb(207 37 68 / 25%),
+  "focus-success": 0 0 0 3px rgb(0 196 140 / 25%),
+  // Brand accent (Coral Shadow shown in DS image)
+  "coral": 0 8px 20px rgb(255 55 95 / 34%),
+) !default;
+$blurs: (
+  "none": 0,
+  "xs": 2px,
+  // subtle
+  "sm": 5px,
+  "md": 10px,
+  "lg": 16px,
+  "xl": 20px,
+  "xxl": 32px,
+  "heavy": 24px,
+  "ultra": 64px,
+) !default;
+$box-shadow: 0 4px 8px rgb(0 0 0 / 6%) !default; // maps to 'md'
+$box-shadow-sm: 0 1px 2px rgb(0 0 0 / 4%) !default; // maps to 'sm'
+$box-shadow-lg: 0 8px 12px rgb(0 0 0 / 8%) !default; // maps to 'lg'

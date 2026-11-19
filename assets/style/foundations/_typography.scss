@@ -1,0 +1,286 @@
+// Typography: STC Forward faces and type scale.
+
+// ─────────────────────────────────────────────────────────────────────────────
+// CONFIGURATION
+// ─────────────────────────────────────────────────────────────────────────────
+$font-path: "../assets/font/" !default;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// @font-face DECLARATIONS — STC Forward
+// All weights declared with font-display: swap for performance.
+// ─────────────────────────────────────────────────────────────────────────────
+
+// 100 Thin
+@font-face {
+  font-family: "STC Forward";
+  src:
+    url("#{$font-path}STCForward-Thin.woff2") format("woff2"),
+    url("#{$font-path}STCForward-Thin.woff") format("woff");
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "STC Forward";
+  src:
+    url("#{$font-path}STCForward-ThinItalic.woff2") format("woff2"),
+    url("#{$font-path}STCForward-ThinItalic.woff") format("woff");
+  font-weight: 100;
+  font-style: italic;
+  font-display: swap;
+}
+
+// 300 Light
+@font-face {
+  font-family: "STC Forward";
+  src:
+    url("#{$font-path}STCForward-Light.woff2") format("woff2"),
+    url("#{$font-path}STCForward-Light.woff") format("woff");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "STC Forward";
+  src:
+    url("#{$font-path}STCForward-LightItalic.woff2") format("woff2"),
+    url("#{$font-path}STCForward-LightItalic.woff") format("woff");
+  font-weight: 300;
+  font-style: italic;
+  font-display: swap;
+}
+
+// 400 Regular
+@font-face {
+  font-family: "STC Forward";
+  src:
+    url("#{$font-path}STCForward-Regular.woff2") format("woff2"),
+    url("#{$font-path}STCForward-Regular.woff") format("woff");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "STC Forward";
+  src:
+    url("#{$font-path}STCForward-Italic.woff2") format("woff2"),
+    url("#{$font-path}STCForward-Italic.woff") format("woff");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+// 500 Medium
+@font-face {
+  font-family: "STC Forward";
+  src:
+    url("#{$font-path}STCForward-Medium.woff2") format("woff2"),
+    url("#{$font-path}STCForward-Medium.woff") format("woff");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "STC Forward";
+  src:
+    url("#{$font-path}STCForward-MediumItalic.woff2") format("woff2"),
+    url("#{$font-path}STCForward-MediumItalic.woff") format("woff");
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+}
+
+// 700 Bold
+@font-face {
+  font-family: "STC Forward";
+  src:
+    url("#{$font-path}STCForward-Bold.woff2") format("woff2"),
+    url("#{$font-path}STCForward-Bold.woff") format("woff");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "STC Forward";
+  src:
+    url("#{$font-path}STCForward-BoldItalic.woff2") format("woff2"),
+    url("#{$font-path}STCForward-BoldItalic.woff") format("woff");
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+// 800 ExtraBold
+@font-face {
+  font-family: "STC Forward";
+  src:
+    url("#{$font-path}STCForward-ExtraBold.woff2") format("woff2"),
+    url("#{$font-path}STCForward-ExtraBold.woff") format("woff");
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "STC Forward";
+  src:
+    url("#{$font-path}STCForward-ExtraBoldItalic.woff2") format("woff2"),
+    url("#{$font-path}STCForward-ExtraBoldItalic.woff") format("woff");
+  font-weight: 800;
+  font-style: italic;
+  font-display: swap;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// FONT-FAMILY STACK (single source of truth)
+// ─────────────────────────────────────────────────────────────────────────────
+$font-family-base:
+  "STC Forward",
+  system-ui,
+  -apple-system,
+  "Segoe UI",
+  roboto,
+  "Helvetica Neue",
+  arial,
+  "Noto Sans",
+  sans-serif !default;
+$font-family-mono:
+  "SFMono-Regular", consolas, "Liberation Mono", menlo, courier, monospace !default;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// FONT WEIGHT TOKENS
+// ─────────────────────────────────────────────────────────────────────────────
+$font-weights: (
+  "thin": 100,
+  "light": 300,
+  "regular": 400,
+  "medium": 500,
+  "semibold": 600,
+  "bold": 700,
+  "extrabold": 800,
+) !default;
+
+// Bootstrap font-weight vars — BS components use these
+$font-weight-lighter: lighter !default;
+$font-weight-light: 300 !default;
+$font-weight-normal: 400 !default;
+$font-weight-medium: 500 !default;
+$font-weight-semibold: 600 !default;
+$font-weight-bold: 700 !default;
+$font-weight-bolder: 800 !default;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// TYPE SCALE — matches DS Figma spec
+// Keys: display-xxl … display-xs, text-xl … text-xxs
+// Each entry: (size, line-height, letter-spacing, mobile-size)
+// ─────────────────────────────────────────────────────────────────────────────
+$type-scale: (
+  "display-xxl": (
+    size: 4.5rem,
+    lh: 1.1,
+    ls: -0.02em,
+    mob: 3rem,
+  ),
+  "display-xl": (
+    size: 3.75rem,
+    lh: 1.1,
+    ls: -0.02em,
+    mob: 2.5rem,
+  ),
+  "display-lg": (
+    size: 3rem,
+    lh: 1.2,
+    ls: -0.01em,
+    mob: 2rem,
+  ),
+  "display-md": (
+    size: 2.25rem,
+    lh: 1.2,
+    ls: -0.01em,
+    mob: 1.75rem,
+  ),
+  "display-sm": (
+    size: 1.875rem,
+    lh: 1.3,
+    ls: 0,
+    mob: 1.5rem,
+  ),
+  "display-xs": (
+    size: 1.5rem,
+    lh: 1.3,
+    ls: 0,
+    mob: 1.25rem,
+  ),
+  "text-xl": (
+    size: 1.25rem,
+    lh: 1.6,
+    ls: 0,
+    mob: 1.125rem,
+  ),
+  "text-lg": (
+    size: 1.125rem,
+    lh: 1.6,
+    ls: 0,
+    mob: 1rem,
+  ),
+  "text-md": (
+    size: 1rem,
+    lh: 1.6,
+    ls: 0,
+    mob: 0.875rem,
+  ),
+  "text-sm": (
+    size: 0.875rem,
+    lh: 1.6,
+    ls: 0,
+    mob: 0.75rem,
+  ),
+  "text-xs": (
+    size: 0.75rem,
+    lh: 1.5,
+    ls: 0,
+    mob: 0.6875rem,
+  ),
+  "text-xxs": (
+    size: 0.625rem,
+    lh: 1.4,
+    ls: 0,
+    mob: 0.625rem,
+  ),
+) !default;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// LINE HEIGHT & LETTER SPACING TOKENS
+// ─────────────────────────────────────────────────────────────────────────────
+$line-heights: (
+  "none": 1,
+  "tight": 1.2,
+  "normal": 1.5,
+  "relaxed": 1.6,
+  "loose": 1.8,
+) !default;
+$letter-spacings: (
+  "tighter": -0.05em,
+  "tight": -0.02em,
+  "normal": 0,
+  "wide": 0.02em,
+  "wider": 0.05em,
+  "widest": 0.1em,
+) !default;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// BOOTSTRAP TYPOGRAPHY OVERRIDES
+// ─────────────────────────────────────────────────────────────────────────────
+$font-size-base: 1rem !default; // text-md
+$line-height-base: 1.6 !default; // relaxed
+$font-size-sm: 0.875rem !default; // text-sm
+$font-size-lg: 1.125rem !default; // text-lg
+
+// Headings — Bootstrap uses h1–h6 vars
+$h1-font-size: 3rem !default; // display-lg
+$h2-font-size: 2.25rem !default; // display-md
+$h3-font-size: 1.875rem !default; // display-sm
+$h4-font-size: 1.5rem !default; // display-xs
+$h5-font-size: 1.25rem !default; // text-xl
+$h6-font-size: 1.125rem !default; // text-lg
+$headings-font-weight: 700 !default;
+$headings-line-height: 1.2 !default;
